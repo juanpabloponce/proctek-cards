@@ -72,18 +72,8 @@
       margin-bottom: 6px;
     }
     
-    .form-group input {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      padding: 12px 16px;
-      color: white;
-      font-family: 'Funnel Display', sans-serif;
-      font-size: 1rem;
-      transition: all 0.2s;
-    }
-    
-    input.form-group {
+    .form-group input,
+    .form-group select {
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 8px;
@@ -95,7 +85,7 @@
     }
     
     .form-group input:focus,
-    input.form-group:focus {
+    .form-group select:focus {
       outline: none;
       border-color: #4ade80;
       background: rgba(255,255,255,0.15);
@@ -477,6 +467,13 @@
     .config-input {
       flex: 1;
       max-width: 200px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: white;
+      font-family: 'Funnel Display', sans-serif;
+      font-size: 1rem;
     }
     
     .save-btn {
@@ -520,8 +517,7 @@
       padding: 40px;
     }
     
-    
-    /* Admin Panel */
+    /* Admin Section */
     .admin-section {
       border: 1px solid rgba(74, 222, 128, 0.3);
       background: rgba(74, 222, 128, 0.05);
@@ -644,11 +640,11 @@
     <div class="admin-content active" id="tab-credentials">
       <div class="config-row">
         <span class="config-label">Usuario admin:</span>
-        <input type="email" id="configUser" class="form-group" style="margin:0; flex:1; max-width:200px;">
+        <input type="email" id="configUser" class="config-input">
       </div>
       <div class="config-row">
         <span class="config-label">Contraseña:</span>
-        <input type="text" id="configPass" class="form-group" style="margin:0; flex:1; max-width:200px;">
+        <input type="text" id="configPass" class="config-input">
       </div>
       <button class="save-btn" onclick="saveCredentials()">💾 Guardar credenciales</button>
     </div>
@@ -680,11 +676,11 @@
       </div>
       <div class="config-row">
         <span class="config-label">Tamaño nombre (px):</span>
-        <input type="number" id="configNameSize" value="18" class="form-group" style="margin:0; flex:1; max-width:80px;">
+        <input type="number" id="configNameSize" value="18" class="config-input" style="max-width:80px;">
       </div>
       <div class="config-row">
         <span class="config-label">Tamaño cargo (px):</span>
-        <input type="number" id="configTitleSize" value="12" class="form-group" style="margin:0; flex:1; max-width:80px;">
+        <input type="number" id="configTitleSize" value="12" class="config-input" style="max-width:80px;">
       </div>
       <button class="save-btn" onclick="saveDesign()">💾 Guardar todo</button>
     </div>
@@ -694,11 +690,11 @@
       <div style="margin-bottom: 20px;">
         <div class="config-row">
           <span class="config-label">Abreviación (ISO):</span>
-          <input type="text" id="newCountryCode" placeholder="BR" class="form-group" style="margin:0; flex:1; max-width:80px;" maxlength="3">
+          <input type="text" id="newCountryCode" placeholder="BR" class="config-input" style="max-width:80px;" maxlength="3">
         </div>
         <div class="config-row">
           <span class="config-label">Código telefónico:</span>
-          <input type="text" id="newCountryPhone" placeholder="+55" class="form-group" style="margin:0; flex:1; max-width:100px;">
+          <input type="text" id="newCountryPhone" placeholder="+55" class="config-input" style="max-width:100px;">
         </div>
         <button class="save-btn" onclick="addCountry()">➕ Agregar país</button>
       </div>
@@ -736,7 +732,7 @@
     </div>
   </div>
   
-  <!-- Admin Panel -->
+  <!-- Admin Panel - Personalización -->
   <div class="form-section admin-section">
     <div class="form-title">⚙️ Personalización</div>
     <div class="admin-grid">
@@ -763,7 +759,7 @@
     <!-- FRENTE -->
     <div>
       <div class="card-label">FRENTE</div>
-      <div class="card-front">
+      <div class="card-front" id="cardFront">
         <svg class="icon" viewBox="280 175 85 95" fill="white">
           <path d="M361.44,232.85c-5.74,2.77-11.66,4.6-17.99,5.56-2.47.38-4.59.36-6.99.49-7.21.42-14.22.22-21.19-1.2-12.39-2.53-25.8-8.61-33.51-19.01-.04.78-.07,1.56-.07,2.35,0,9.68,3.33,18.59,8.9,25.64,5.7,3,13.18,4.52,19.4,4.93.48.03,8.47-.14,11.55-.44,3.22-.3,6.22-.96,9.38-1.73,6.93-1.7,14.09-4.74,20.24-8.57,2.93-1.82,5.78-3.79,8.47-5.93.19-.02-.15.35-.29.51-2.59,3.08-6.06,6.17-9.37,8.47-10.29,7.16-24.88,12.27-37.5,12.51-.82.02-9.62-.3-12-.72,6.5,4.25,14.26,6.72,22.6,6.72,19.03,0,35.05-12.84,39.89-30.33l-1.54.75Z"/>
           <path d="M310.33,203.31c12.2,14.58,31.7,23.52,50.2,23.74.05,0,.1,0,.16,0l3.4-.28c.26-1.87.4-3.78.4-5.72,0-22.86-18.53-41.39-41.39-41.39-7.81,0-15.12,2.17-21.36,5.93,0,0,0,0,0,0,.86,6.22,3.58,11.72,8.6,17.71Z"/>
@@ -814,21 +810,21 @@
     <!-- REVERSO -->
     <div>
       <div class="card-label">REVERSO</div>
-      <div class="card-back">
+      <div class="card-back" id="cardBack">
         <!-- Logo PROCTEK azul -->
         <svg class="logo-top" viewBox="0 0 72.08 12.39">
           <g>
-            <path class="azul" fill="#0f1053" d="M11.94,7.96c-.86.42-1.75.69-2.69.83-.37.06-.69.05-1.05.07-1.08.06-2.13.03-3.17-.18C3.17,8.31,1.16,7.4.01,5.84c0,.12-.01.23-.01.35,0,1.45.5,2.78,1.33,3.84.85.45,1.97.68,2.9.74.07,0,1.27-.02,1.73-.07.48-.05.93-.14,1.4-.26,1.04-.25,2.11-.71,3.03-1.28.44-.27.87-.57,1.27-.89.03,0-.02.05-.04.08-.39.46-.91.92-1.4,1.27-1.54,1.07-3.72,1.84-5.61,1.87-.12,0-1.44-.05-1.8-.11.97.64,2.14,1.01,3.38,1.01,2.85,0,5.25-1.92,5.97-4.54l-.23.11Z"/>
-            <path class="azul" fill="#0f1053" d="M4.28,3.54c1.83,2.18,4.75,3.52,7.51,3.55,0,0,.02,0,.02,0l.51-.04c.04-.28.06-.57.06-.86,0-3.42-2.77-6.2-6.2-6.2-1.17,0-2.26.32-3.2.89,0,0,0,0,0,0,.13.93.54,1.76,1.29,2.65Z"/>
-            <path class="azul" fill="#0f1053" d="M2.09,6.54c1.91,1.42,4.48,1.92,6.83,1.84.14,0,.74-.03.94-.07.49-.09.98-.18,1.47-.3.31-.08.58-.17.87-.27.05-.2.09-.41.13-.62-.09.02-.17.04-.25.06-.24.05-.46.07-.69.09-1.62.19-3.34-.21-4.83-.88-1.86-.84-4.01-2.55-4.33-4.69l-.03-.22c-.87.74-1.54,1.73-1.89,2.84.33.82.95,1.58,1.81,2.22Z"/>
-            <path class="azul" fill="#0f1053" d="M30.75,7.64l-1.21-.94h.04c.35,0,.65-.11.91-.33.26-.22.39-.51.4-.85.02-.36-.1-.69-.36-.97-.26-.28-.57-.42-.92-.42h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.92s.1,0,.18.09c.06.07.09.14.09.21,0,.07-.02.13-.07.18-.05.05-.11.08-.18.08h-4.93c-.14,0-.26.05-.35.15-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.53c.14,0,.26.04.37.13l1.6,1.24c.15.11.33.17.53.17h.32c.1,0,.18-.04.25-.11.07-.07.1-.17.08-.26,0-.09-.05-.17-.13-.23Z"/>
-            <path class="azul" fill="#0f1053" d="M36.55,4.14h-2.73c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h2.73c.54,0,1.01-.19,1.39-.58s.58-.85.58-1.39v-.18c0-.54-.19-1.01-.58-1.39-.38-.38-.85-.58-1.39-.58ZM36.6,7.21h-2.85c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h2.85c.26,0,.48.09.66.27.18.18.27.4.27.66v.18c0,.26-.09.48-.27.66-.18.18-.4.27-.66.27Z"/>
-            <path class="azul" fill="#0f1053" d="M45.92,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
-            <path class="azul" fill="#0f1053" d="M53.53,4.14h-5.91c-.14,0-.26.05-.35.15-.1.1-.15.21-.15.35v.29c0,.07.03.13.08.17.05.05.11.08.18.08h2.59v2.81c0,.07.03.13.08.18.05.05.11.08.17.08h.23c.13,0,.25-.05.35-.14.1-.1.15-.22.15-.36v-2.57h2.34c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18s-.11-.07-.18-.07Z"/>
-            <path class="azul" fill="#0f1053" d="M61.17,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.09-.09-.15-.19-.2-.29h4.3c.15,0,.29-.04.41-.13.13-.1.19-.22.19-.37v-.22c0-.08-.04-.15-.1-.19-.05-.04-.12-.06-.19-.06h-4.58c.04-.08.1-.16.17-.23.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
-            <path class="azul" fill="#0f1053" d="M68.88,7.64l-1.89-1.45,1.89-1.46c.08-.06.12-.15.12-.26,0-.1-.03-.18-.1-.24-.06-.06-.14-.09-.23-.09h-.33c-.19,0-.36.06-.52.17l-1.76,1.36h-2.74s0-1.04,0-1.04c0-.13-.05-.25-.15-.35-.1-.1-.22-.15-.35-.15h-.22c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v3.59c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.74s1.76,1.35,1.76,1.35c.16.12.33.18.53.18h.32c.1,0,.18-.03.24-.1.06-.06.09-.14.09-.23,0-.11-.04-.2-.13-.27Z"/>
-            <path class="azul" fill="#0f1053" d="M21.91,4.14h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.93s.1,0,.17.09c.06.07.09.14.09.22,0,.07-.02.12-.07.17s-.11.07-.18.07l-4.87.03c-.14,0-.32.02-.41.12-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h4.4c.35,0,.65-.12.9-.34.25-.23.38-.53.38-.88s-.13-.67-.37-.94c-.25-.27-.56-.41-.91-.41Z"/>
-            <path class="azul" fill="#0f1053" d="M72.08,7.48v.07c0,.4-.32.72-.72.72h-.42c-.4,0-.72-.32-.72-.72v-.07c0-.4.32-.72.72-.72h.42c.4,0,.72.32.72.72ZM71.84,7.48c0-.25-.2-.46-.46-.46h-.47c-.25,0-.46.21-.46.46v.07c0,.25.21.46.46.46h.47c.25,0,.46-.21.46-.46v-.07Z"/>
+            <path fill="#0f1053" d="M11.94,7.96c-.86.42-1.75.69-2.69.83-.37.06-.69.05-1.05.07-1.08.06-2.13.03-3.17-.18C3.17,8.31,1.16,7.4.01,5.84c0,.12-.01.23-.01.35,0,1.45.5,2.78,1.33,3.84.85.45,1.97.68,2.9.74.07,0,1.27-.02,1.73-.07.48-.05.93-.14,1.4-.26,1.04-.25,2.11-.71,3.03-1.28.44-.27.87-.57,1.27-.89.03,0-.02.05-.04.08-.39.46-.91.92-1.4,1.27-1.54,1.07-3.72,1.84-5.61,1.87-.12,0-1.44-.05-1.8-.11.97.64,2.14,1.01,3.38,1.01,2.85,0,5.25-1.92,5.97-4.54l-.18.09Z"/>
+            <path fill="#0f1053" d="M4.28,3.54c1.83,2.18,4.75,3.52,7.51,3.55,0,0,.02,0,.02,0l.51-.04c.04-.28.06-.57.06-.86,0-3.42-2.77-6.2-6.2-6.2-1.17,0-2.26.32-3.2.89,0,0,0,0,0,0,.13.93.54,1.76,1.29,2.65Z"/>
+            <path fill="#0f1053" d="M2.09,6.54c1.91,1.42,4.48,1.92,6.83,1.84.14,0,.74-.03.94-.07.49-.09.98-.18,1.47-.3.31-.08.58-.17.87-.27.05-.2.09-.41.13-.62-.09.02-.17.04-.25.06-.24.05-.46.07-.69.09-1.62.19-3.34-.21-4.83-.88-1.86-.84-4.01-2.55-4.33-4.69l-.03-.22c-.87.74-1.54,1.73-1.89,2.84.33.82.95,1.58,1.81,2.22Z"/>
+            <path fill="#0f1053" d="M30.75,7.64l-1.21-.94h.04c.35,0,.65-.11.91-.33.26-.22.39-.51.4-.85.02-.36-.1-.69-.36-.97-.26-.28-.57-.42-.92-.42h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.92s.1,0,.18.09c.06.07.09.14.09.21,0,.07-.02.13-.07.18-.05.05-.11.08-.18.08h-4.93c-.14,0-.26.05-.35.15-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.53c.14,0,.26.04.37.13l1.6,1.24c.15.11.33.17.53.17h.32c.1,0,.18-.04.25-.11.07-.07.1-.17.08-.26,0-.09-.05-.17-.13-.23Z"/>
+            <path fill="#0f1053" d="M36.55,4.14h-2.73c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h2.73c.54,0,1.01-.19,1.39-.58s.58-.85.58-1.39v-.18c0-.54-.19-1.01-.58-1.39-.38-.38-.85-.58-1.39-.58ZM36.6,7.21h-2.85c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h2.85c.26,0,.48.09.66.27.18.18.27.4.27.66v.18c0,.26-.09.48-.27.66-.18.18-.4.27-.66.27Z"/>
+            <path fill="#0f1053" d="M45.92,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
+            <path fill="#0f1053" d="M53.53,4.14h-5.91c-.14,0-.26.05-.35.15-.1.1-.15.21-.15.35v.29c0,.07.03.13.08.17.05.05.11.08.18.08h2.59v2.81c0,.07.03.13.08.18.05.05.11.08.17.08h.23c.13,0,.25-.05.35-.14.1-.1.15-.22.15-.36v-2.57h2.34c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18s-.11-.07-.18-.07Z"/>
+            <path fill="#0f1053" d="M61.17,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.09-.09-.15-.19-.2-.29h4.3c.15,0,.29-.04.41-.13.13-.1.19-.22.19-.37v-.22c0-.08-.04-.15-.1-.19-.05-.04-.12-.06-.19-.06h-4.58c.04-.08.1-.16.17-.23.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
+            <path fill="#0f1053" d="M68.88,7.64l-1.89-1.45,1.89-1.46c.08-.06.12-.15.12-.26,0-.1-.03-.18-.1-.24-.06-.06-.14-.09-.23-.09h-.33c-.19,0-.36.06-.52.17l-1.76,1.36h-2.74s0-1.04,0-1.04c0-.13-.05-.25-.15-.35-.1-.1-.22-.15-.35-.15h-.22c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v3.59c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.74s1.76,1.35,1.76,1.35c.16.12.33.18.53.18h.32c.1,0,.18-.03.24-.1.06-.06.09-.14.09-.23,0-.11-.04-.2-.13-.27Z"/>
+            <path fill="#0f1053" d="M21.91,4.14h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.93s.1,0,.17.09c.06.07.09.14.09.22,0,.07-.02.12-.07.17s-.11.07-.18.07l-4.87.03c-.14,0-.32.02-.41.12-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h4.4c.35,0,.65-.12.9-.34.25-.23.38-.53.38-.88s-.13-.67-.37-.94c-.25-.27-.56-.41-.91-.41Z"/>
+            <path fill="#0f1053" d="M72.08,7.48v.07c0,.4-.32.72-.72.72h-.42c-.4,0-.72-.32-.72-.72v-.07c0-.4.32-.72.72-.72h.42c.4,0,.72.32.72.72ZM71.84,7.48c0-.25-.2-.46-.46-.46h-.47c-.25,0-.46.21-.46.46v.07c0,.25.21.46.46.46h.47c.25,0,.46-.21.46-.46v-.07Z"/>
           </g>
         </svg>
         
@@ -837,7 +833,7 @@
           <div class="name" id="preview-nombre">John Smith</div>
           <div class="title" id="preview-cargo">Project Manager</div>
           <div class="phone" id="preview-telefono">(+593) 55 123 4567</div>
-          <div class="email" id="preview-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="53393c3b3d7d203e3a273b1323213c302736387d303c3e">[email&#160;protected]</a></div>
+          <div class="email" id="preview-email">john.smith@proctek.com</div>
         </div>
         
         <!-- Footer izquierda -->
@@ -893,32 +889,7 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// Función para cambiar color del fondo del frente
-function setFrontColor(color) {
-  document.querySelector('.card-front').style.backgroundColor = color;
-  
-  // Actualizar campo hex y color picker
-  var hexInput = document.getElementById('hexValue');
-  var colorPicker = document.getElementById('customColor');
-  if (hexInput) hexInput.value = color;
-  if (colorPicker) colorPicker.value = color;
-  
-  // Actualizar botón activo
-  document.querySelectorAll('.color-btn').forEach(function(btn) {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-color') === color) {
-      btn.classList.add('active');
-    }
-  });
-}
-
-// Función para el admin
-function cambiarColorTarjeta() {
-  var color = document.getElementById('colorPicker').value;
-  setFrontColor(color);
-  document.getElementById('colorHexDisplay').textContent = color;
-}
+<script>
 // ========== CONFIGURACIÓN INICIAL ==========
 const DEFAULT_CONFIG = {
   user: 'juan.ponce@proctek.com',
@@ -948,23 +919,34 @@ let currentFrontColor = '#0f1053';
 
 // Cargar config de localStorage o usar defaults
 function getConfig() {
-  const saved = localStorage.getItem('proctek_config');
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    // Combinar con defaults para campos faltantes
-    return { ...DEFAULT_CONFIG, ...parsed };
+  try {
+    const saved = localStorage.getItem('proctek_config');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return { ...DEFAULT_CONFIG, ...parsed };
+    }
+  } catch (e) {
+    console.warn('Error loading config:', e);
   }
   return { ...DEFAULT_CONFIG };
 }
 
 function saveConfig(config) {
-  localStorage.setItem('proctek_config', JSON.stringify(config));
+  try {
+    localStorage.setItem('proctek_config', JSON.stringify(config));
+  } catch (e) {
+    console.warn('Error saving config:', e);
+  }
 }
 
 // Historial
 function getHistory() {
-  const saved = localStorage.getItem('proctek_history');
-  return saved ? JSON.parse(saved) : [];
+  try {
+    const saved = localStorage.getItem('proctek_history');
+    return saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    return [];
+  }
 }
 
 function addToHistory(data) {
@@ -973,7 +955,11 @@ function addToHistory(data) {
     fecha: new Date().toLocaleString('es-ES'),
     ...data
   });
-  localStorage.setItem('proctek_history', JSON.stringify(history.slice(0, 50)));
+  try {
+    localStorage.setItem('proctek_history', JSON.stringify(history.slice(0, 50)));
+  } catch (e) {
+    console.warn('Error saving history:', e);
+  }
 }
 
 // ========== LOGIN ==========
@@ -1064,16 +1050,13 @@ function saveDesign() {
 
 function aplicarColor() {
   var color = document.getElementById('colorPicker').value;
+  document.getElementById('cardFront').style.backgroundColor = color;
+  currentFrontColor = color;
   
-  // Cambiar fondo del frente
-  document.querySelector('.card-front').style.background = color;
-  
-  // Guardar en config
   var config = getConfig();
   config.color = color;
   saveConfig(config);
   
-  // Actualizar display
   var hexDisplay = document.getElementById('colorHexDisplay');
   if (hexDisplay) hexDisplay.textContent = color;
 }
@@ -1089,8 +1072,10 @@ function aplicarTamanos() {
   if (cargo) cargo.style.fontSize = titleSize + 'px';
 }
 
-function applyDesign() {
-  // No hacer nada - el color por defecto viene del CSS
+function cambiarColorTarjeta() {
+  var color = document.getElementById('colorPicker').value;
+  setFrontColor(color);
+  document.getElementById('colorHexDisplay').textContent = color;
 }
 
 function loadHistory() {
@@ -1123,6 +1108,8 @@ function getCountries() {
 function loadCountriesSelect() {
   const countries = getCountries();
   const select = document.getElementById('pais');
+  if (!select) return;
+  
   select.innerHTML = countries.map(c => 
     `<option value="${c.phone}">${c.code} ${c.phone}</option>`
   ).join('');
@@ -1131,6 +1118,8 @@ function loadCountriesSelect() {
 function loadCountriesList() {
   const countries = getCountries();
   const list = document.getElementById('countriesList');
+  if (!list) return;
+  
   list.innerHTML = countries.map((c, i) => `
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 6px;">
       <span style="color: white;">${c.code} ${c.phone}</span>
@@ -1186,11 +1175,32 @@ function removeCountry(index) {
   loadCountriesSelect();
 }
 
+// ========== COLOR DEL FRENTE ==========
+function setFrontColor(color) {
+  document.getElementById('cardFront').style.backgroundColor = color;
+  currentFrontColor = color;
+  
+  // Actualizar campo hex y color picker
+  var hexInput = document.getElementById('hexValue');
+  var colorPicker = document.getElementById('customColor');
+  if (hexInput) hexInput.value = color;
+  if (colorPicker) colorPicker.value = color;
+  
+  // Actualizar botón activo
+  document.querySelectorAll('.color-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-color') === color) {
+      btn.classList.add('active');
+    }
+  });
+}
+
 // ========== TARJETA ==========
 function updateCard() {
   const nombre = document.getElementById('nombre').value || 'John Smith';
   const cargo = document.getElementById('cargo').value || 'Project Manager';
-  const pais = document.getElementById('pais').value;
+  const paisSelect = document.getElementById('pais');
+  const pais = paisSelect ? paisSelect.value : '+593';
   const telefonoNum = document.getElementById('telefono').value || '55 123 4567';
   const telefono = '(' + pais + ') ' + telefonoNum;
   const email = document.getElementById('email').value || 'john.smith@proctek.com';
@@ -1208,7 +1218,8 @@ async function downloadPDF() {
   
   const nombre = document.getElementById('nombre').value || 'John Smith';
   const cargo = document.getElementById('cargo').value || 'Project Manager';
-  const pais = document.getElementById('pais').value;
+  const paisSelect = document.getElementById('pais');
+  const pais = paisSelect ? paisSelect.value : '+593';
   const telefonoNum = document.getElementById('telefono').value || '55 123 4567';
   const telefono = '(' + pais + ') ' + telefonoNum;
   const email = document.getElementById('email').value || 'john.smith@proctek.com';
@@ -1221,7 +1232,7 @@ async function downloadPDF() {
     const cardHeightMM = 50;
     const scale = 4;
     
-    const frontCard = document.querySelector('.card-front');
+    const frontCard = document.getElementById('cardFront');
     const frontCanvas = await html2canvas(frontCard, {
       scale: scale,
       useCORS: true,
@@ -1230,7 +1241,7 @@ async function downloadPDF() {
       allowTaint: true
     });
     
-    const backCard = document.querySelector('.card-back');
+    const backCard = document.getElementById('cardBack');
     const backCanvas = await html2canvas(backCard, {
       scale: scale,
       useCORS: true,
@@ -1255,7 +1266,7 @@ async function downloadPDF() {
     const fileName = `PROCTEK_Tarjeta_${nombre.replace(/\s+/g, '_')}.pdf`;
     pdf.save(fileName);
     
-    btn.textContent = 'Listo!';
+    btn.textContent = '✓ Listo!';
     setTimeout(() => {
       btn.disabled = false;
       btn.textContent = 'Descargar PDF';
@@ -1263,5 +1274,31 @@ async function downloadPDF() {
     
   } catch (error) {
     console.error('Error:', error);
-    btn.textContent = 'Error';
-    setTimeout(() 
+    btn.textContent = 'Error - Reintentar';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Descargar PDF';
+    }, 2000);
+  }
+}
+
+// ========== INICIALIZACIÓN ==========
+document.addEventListener('DOMContentLoaded', function() {
+  // Cargar países en el select
+  loadCountriesSelect();
+  
+  // Aplicar configuración guardada
+  const config = getConfig();
+  if (config.color) {
+    setFrontColor(config.color);
+  }
+  
+  // Inicializar preview
+  updateCard();
+  
+  console.log('PROCTEK Card Generator initialized');
+});
+</script>
+
+</body>
+</html>
