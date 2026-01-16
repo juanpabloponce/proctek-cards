@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PROCTEK - Generador de Tarjetas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Funnel Display', -apple-system, sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      padding: 20px 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    h1 { 
+      color: white; 
+      font-weight: 300; 
+      font-size: 2rem; 
+      text-align: center;
+      margin-bottom: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .subtitle { 
+      color: rgba(255,255,255,0.4); 
+      font-size: 0.9rem; 
+      text-align: center;
+      margin-bottom: 20px; 
+    }
+    
+    /* Formulario */
+    .form-section {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+    
+    .form-title {
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-group label {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+    }
+    
+    .form-group input {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: white;
+      font-family: 'Funnel Display', sans-serif;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    
+    input.form-group {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: white;
+      font-family: 'Funnel Display', sans-serif;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .form-group input:focus,
+    input.form-group:focus {
+      outline: none;
+      border-color: #4ade80;
+      background: rgba(255,255,255,0.15);
+    }
+    
+    .form-group input::placeholder {
+      color: rgba(255,255,255,0.3);
+    }
+    
+    select option {
+      background: #1a1a2e;
+      color: white;
+    }
+    
+    /* Cards preview */
+    .cards-section {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+    }
+    
+    .card-label {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    /* Frente */
+    .card-front {
+      width: 450px;
+      height: 250px;
+      background: #0f1053;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      padding: 20px;
+    }
+    
+    .card-front .icon { width: 70px; margin-bottom: 8px; }
+    .card-front .brand { width: 180px; margin-bottom: 28px; }
+    .card-front .tagline { width: 155px; height: 12px; }
+    
+    /* Reverso */
+    .card-back {
+      width: 450px;
+      height: 250px;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      padding: 24px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .card-back .logo-top { 
+      width: 100px;
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+    }
+    
+    .card-back .contact-info {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      text-align: center;
+      font-family: 'Funnel Display', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .card-back .name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f1053;
+      margin-bottom: 4px;
+    }
+    
+    .card-back .title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #0f1053;
+      margin-bottom: 12px;
+    }
+    
+    .card-back .phone, 
+    .card-back .email {
+      font-size: 11px;
+      font-weight: 400;
+      color: #0f1053;
+      margin-bottom: 2px;
+    }
+    
+    .card-back .footer-left {
+      grid-column: 1;
+      grid-row: 3;
+      font-family: 'Funnel Display', sans-serif;
+      text-align: center;
+      align-self: end;
+      justify-self: start;
+    }
+    
+    .card-back .more-info {
+      font-size: 9px;
+      color: #0f1053;
+    }
+    
+    .card-back .website {
+      font-size: 11px;
+      font-weight: 600;
+      color: #0f1053;
+    }
+    
+    .card-back .footer-right {
+      grid-column: 2;
+      grid-row: 3;
+      width: 100px;
+      align-self: end;
+      justify-self: end;
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .card-front, .card-back {
+        width: 100%;
+        max-width: 450px;
+      }
+    }
+    
+    /* Botón de descarga */
+    .download-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+    
+    .download-btn {
+      background: #004fff;
+      color: #fff;
+      border: none;
+      padding: 12px 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: 'Funnel Display', sans-serif;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(0, 79, 255, 0.3);
+    }
+    
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(0, 79, 255, 0.4);
+    }
+    
+    .download-btn:disabled {
+      background: #555;
+      color: #999;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .download-info {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+      margin-top: 12px;
+    }
+    
+    /* Admin button */
+    .admin-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.5);
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-family: 'Funnel Display', sans-serif;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .admin-btn:hover {
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal {
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .modal-title {
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    
+    .modal .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .modal .form-group label {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+    
+    .modal .form-group input {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: white;
+      font-family: 'Funnel Display', sans-serif;
+      font-size: 1rem;
+    }
+    
+    .modal-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'Funnel Display', sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .modal-btn.primary {
+      background: #4ade80;
+      color: #000;
+      border: none;
+    }
+    
+    .modal-btn.secondary {
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .modal-btn:hover {
+      transform: translateY(-1px);
+    }
+    
+    .error-msg {
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      text-align: center;
+      display: none;
+    }
+    
+    /* Admin Panel */
+    .admin-panel {
+      display: none;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 40px;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+    
+    .admin-panel.active {
+      display: block;
+    }
+    
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    
+    .admin-title {
+      color: #4ade80;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.5);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    
+    .admin-tab {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Funnel Display', sans-serif;
+    }
+    
+    .admin-tab.active {
+      background: rgba(74, 222, 128, 0.2);
+      border-color: #4ade80;
+      color: #4ade80;
+    }
+    
+    .admin-content {
+      display: none;
+    }
+    
+    .admin-content.active {
+      display: block;
+    }
+    
+    .config-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .config-label {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      min-width: 150px;
+    }
+    
+    .config-input {
+      flex: 1;
+      max-width: 200px;
+    }
+    
+    .save-btn {
+      background: #4ade80;
+      color: #000;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Funnel Display', sans-serif;
+      font-weight: 500;
+      margin-top: 16px;
+    }
+    
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .history-table th,
+    .history-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .history-table th {
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+    
+    .history-table td {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+    }
+    
+    .no-history {
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 40px;
+    }
+    
+    
+    /* Admin Panel */
+    .admin-section {
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      background: rgba(74, 222, 128, 0.05);
+    }
+    
+    .admin-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .color-options {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .color-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .color-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .color-btn.active {
+      border-color: #4ade80;
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+    }
+    
+    #customColor {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+    }
+    
+    #customColor::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    
+    #customColor::-webkit-color-swatch {
+      border-radius: 6px;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Botón Admin -->
+<button class="admin-btn" onclick="showLogin()">👤 Admin</button>
+
+<!-- Modal Login -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-title">Acceso Administrador</div>
+    <div class="form-group">
+      <label>Usuario</label>
+      <input type="email" id="adminUser" placeholder="correo@proctek.com">
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="adminPass" placeholder="••••••••">
+    </div>
+    <div class="error-msg" id="loginError">Usuario o contraseña incorrectos</div>
+    <div class="modal-btns">
+      <button class="modal-btn secondary" onclick="hideLogin()">Cancelar</button>
+      <button class="modal-btn primary" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h1>
+    <!-- Logo PROCTEK -->
+    <svg style="width: 300px; margin-bottom: 8px;" viewBox="0 0 640 480">
+      <defs><style>.logo-w{fill:#fff;}</style></defs>
+      <g>
+        <path class="logo-w" d="M361.44,232.85c-5.74,2.77-11.66,4.6-17.99,5.56-2.47.38-4.59.36-6.99.49-7.21.42-14.22.22-21.19-1.2-12.39-2.53-25.8-8.61-33.51-19.01-.04.78-.07,1.56-.07,2.35,0,9.68,3.33,18.59,8.9,25.64,5.7,3,13.18,4.52,19.4,4.93.48.03,8.47-.14,11.55-.44,3.22-.3,6.22-.96,9.38-1.73,6.93-1.7,14.09-4.74,20.24-8.57,2.93-1.82,5.78-3.79,8.47-5.93.19-.02-.15.35-.29.51-2.59,3.08-6.06,6.17-9.37,8.47-10.29,7.16-24.88,12.27-37.5,12.51-.82.02-9.62-.3-12-.72,6.5,4.25,14.26,6.72,22.6,6.72,19.03,0,35.05-12.84,39.89-30.33l-1.54.75Z"/>
+        <path class="logo-w" d="M310.33,203.31c12.2,14.58,31.7,23.52,50.2,23.74.05,0,.1,0,.16,0l3.4-.28c.26-1.87.4-3.78.4-5.72,0-22.86-18.53-41.39-41.39-41.39-7.81,0-15.12,2.17-21.36,5.93,0,0,0,0,0,0,.86,6.22,3.58,11.72,8.6,17.71Z"/>
+        <path class="logo-w" d="M295.7,223.36c12.78,9.51,29.91,12.83,45.6,12.31.95-.03,4.91-.22,6.25-.47,3.3-.62,6.55-1.2,9.83-2.02,2.1-.52,3.89-1.12,5.81-1.83.35-1.36.63-2.75.84-4.16-.57.14-1.14.29-1.7.4-1.57.31-3.09.45-4.63.63-10.83,1.26-22.34-1.39-32.29-5.9-12.42-5.64-26.79-17.02-28.92-31.33l-.22-1.45c-5.83,4.97-10.26,11.53-12.63,19,2.19,5.47,6.36,10.57,12.07,14.82Z"/>
+      </g>
+      <g>
+        <path class="logo-w" d="M244.36,312.48l-7.95-6.13h.26c2.29,0,4.29-.72,5.93-2.14,1.68-1.44,2.56-3.32,2.64-5.58.11-2.38-.68-4.51-2.34-6.33-1.67-1.83-3.7-2.76-6.03-2.76h-33.54c-.44,0-.84.15-1.16.44-.35.31-.53.73-.53,1.2v1.83c0,.91.32,1.69.95,2.32.63.63,1.41.95,2.32.95h32.2c.27,0,.68.06,1.16.6.39.44.59.89.6,1.39.01.47-.14.86-.48,1.2-.33.35-.71.51-1.18.51h-32.29c-.91,0-1.69.32-2.32.95-.63.63-.95,1.41-.95,2.32v11.45c0,.46.17.87.49,1.19.32.33.74.5,1.19.5h1.44c.91,0,1.69-.32,2.32-.95.63-.63.95-1.41.95-2.32v-6.78h16.6c.9,0,1.69.27,2.4.83l10.46,8.1c1.01.75,2.18,1.13,3.45,1.13h2.12c.62,0,1.18-.24,1.62-.71.46-.49.64-1.1.55-1.74-.05-.6-.36-1.11-.88-1.49Z"/>
+        <path class="logo-w" d="M282.32,289.55h-17.9c-3.53,0-6.58,1.27-9.09,3.77-2.5,2.5-3.77,5.56-3.77,9.09v1.16c0,3.53,1.27,6.59,3.77,9.09,2.5,2.5,5.56,3.77,9.09,3.77h17.9c3.53,0,6.59-1.27,9.09-3.77s3.77-5.56,3.77-9.09v-1.16c0-3.53-1.27-6.58-3.77-9.09-2.5-2.5-5.56-3.77-9.09-3.77ZM282.71,309.67h-18.67c-1.7,0-3.1-.58-4.29-1.79-1.19-1.21-1.77-2.62-1.77-4.32v-1.16c0-1.7.58-3.12,1.77-4.32,1.19-1.2,2.59-1.79,4.29-1.79h18.67c1.7,0,3.11.59,4.32,1.79,1.2,1.21,1.79,2.62,1.79,4.32v1.16c0,1.7-.59,3.11-1.79,4.32-1.2,1.2-2.62,1.79-4.32,1.79Z"/>
+        <path class="logo-w" d="M343.73,289.55h-29.12c-3.53,0-6.58,1.27-9.09,3.77-2.5,2.5-3.77,5.56-3.77,9.09v1.16c0,3.53,1.27,6.59,3.77,9.09,2.5,2.5,5.56,3.77,9.09,3.77h29.12c.48,0,.89-.18,1.2-.53.29-.32.44-.72.44-1.16v-1.83c0-.88-.32-1.64-.95-2.28-.63-.63-1.4-.95-2.27-.95h-27.91c-1.7,0-3.1-.58-4.29-1.79-1.19-1.21-1.77-2.62-1.77-4.32v-1.16c0-1.7.58-3.12,1.77-4.32,1.19-1.2,2.59-1.79,4.29-1.79h27.91c.88,0,1.64-.32,2.28-.95.63-.63.95-1.41.95-2.32v-1.83c0-.46-.16-.86-.47-1.17-.31-.31-.71-.47-1.17-.47Z"/>
+        <path class="logo-w" d="M393.55,289.55h-38.69c-.91,0-1.69.32-2.32.95-.63.63-.95,1.4-.95,2.28v1.88c0,.43.17.82.49,1.14.32.33.74.5,1.19.5h16.94v18.43c0,.46.17.87.49,1.19.32.33.72.5,1.15.5h1.49c.87,0,1.64-.32,2.29-.94.66-.63.99-1.42.99-2.33v-16.84h15.35c.88,0,1.64-.32,2.28-.95.63-.63.95-1.41.95-2.32v-1.83c0-.46-.16-.86-.47-1.17s-.71-.47-1.17-.47Z"/>
+        <path class="logo-w" d="M443.62,289.55h-29.12c-3.53,0-6.58,1.27-9.09,3.77-2.5,2.5-3.77,5.56-3.77,9.09v1.16c0,3.53,1.27,6.59,3.77,9.09,2.5,2.5,5.56,3.77,9.09,3.77h29.12c.48,0,.89-.18,1.2-.53.29-.32.44-.72.44-1.16v-1.83c0-.88-.32-1.64-.95-2.28-.63-.63-1.4-.95-2.27-.95h-27.91c-1.7,0-3.1-.58-4.29-1.79-.58-.58-1.01-1.22-1.3-1.91h28.18c1.01,0,1.91-.29,2.67-.87.83-.63,1.26-1.46,1.26-2.4v-1.44c0-.51-.24-.96-.68-1.26-.35-.25-.77-.38-1.24-.38h-30.02c.28-.55.66-1.06,1.12-1.53,1.19-1.2,2.59-1.79,4.29-1.79h27.91c.88,0,1.64-.32,2.28-.95.63-.63.95-1.41.95-2.32v-1.83c0-.46-.16-.86-.47-1.17-.31-.31-.71-.47-1.17-.47Z"/>
+        <path class="logo-w" d="M494.12,312.49l-12.39-9.51,12.4-9.57c.53-.42.81-1.01.81-1.69,0-.62-.23-1.17-.66-1.57-.42-.39-.94-.6-1.51-.6h-2.17c-1.24,0-2.39.38-3.42,1.14l-11.5,8.9h-17.94s0-6.82,0-6.82c0-.88-.32-1.64-.95-2.28-.63-.63-1.41-.95-2.32-.95h-1.44c-.44,0-.84.15-1.16.44-.35.31-.53.73-.53,1.2v23.53c0,.46.17.87.49,1.19.32.33.74.5,1.19.5h1.44c.91,0,1.69-.32,2.32-.95.63-.63.95-1.41.95-2.32v-6.78h17.95s11.5,8.86,11.5,8.86c1.02.79,2.19,1.19,3.47,1.19h2.12c.62,0,1.17-.23,1.57-.66.39-.42.6-.94.6-1.51,0-.71-.28-1.31-.82-1.75Z"/>
+        <path class="logo-w" d="M186.48,289.55h-33.54c-.44,0-.84.15-1.16.44-.35.31-.53.73-.53,1.2v1.83c0,.91.32,1.69.95,2.32.63.63,1.41.95,2.32.95h32.29c.26,0,.66.06,1.12.6.38.45.47.93.47,1.32,0,.44-.06.95-.39,1.28s-.71.49-1.19.49l-31.91.18c-.91,0-2.07.14-2.7.77-.63.63-.95,1.41-.95,2.32v11.45c0,.46.17.87.49,1.19.32.33.74.5,1.19.5h1.44c.91,0,1.69-.32,2.32-.95.63-.63.95-1.41.95-2.32v-6.78h28.82c2.3,0,4.29-.76,5.91-2.25,1.64-1.51,2.47-3.44,2.47-5.74s-.82-4.4-2.45-6.15c-1.64-1.77-3.64-2.66-5.93-2.66Z"/>
+      </g>
+      <path class="logo-w" d="M515,311.28v.47c0,2.6-2.12,4.72-4.72,4.72h-2.77c-2.6,0-4.72-2.12-4.72-4.72v-.47c0-2.6,2.12-4.72,4.72-4.72h2.77c2.6,0,4.72,2.12,4.72,4.72Z"/>
+    </svg>
+  </h1>
+  <p class="subtitle">Generador de Tarjetas de Presentación</p>
+  
+  <!-- Panel Admin -->
+  <div class="admin-panel" id="adminPanel">
+    <div class="admin-header">
+      <div class="admin-title">🔐 Panel de Administración</div>
+      <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+    
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="showAdminTab('credentials')">Credenciales</button>
+      <button class="admin-tab" onclick="showAdminTab('history')">Historial</button>
+      <button class="admin-tab" onclick="showAdminTab('design')">Diseño</button>
+      <button class="admin-tab" onclick="showAdminTab('countries')">Países</button>
+    </div>
+    
+    <!-- Tab: Credenciales -->
+    <div class="admin-content active" id="tab-credentials">
+      <div class="config-row">
+        <span class="config-label">Usuario admin:</span>
+        <input type="email" id="configUser" class="form-group" style="margin:0; flex:1; max-width:200px;">
+      </div>
+      <div class="config-row">
+        <span class="config-label">Contraseña:</span>
+        <input type="text" id="configPass" class="form-group" style="margin:0; flex:1; max-width:200px;">
+      </div>
+      <button class="save-btn" onclick="saveCredentials()">💾 Guardar credenciales</button>
+    </div>
+    
+    <!-- Tab: Historial -->
+    <div class="admin-content" id="tab-history">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+        </tbody>
+      </table>
+      <div class="no-history" id="noHistory">No hay tarjetas generadas aún</div>
+    </div>
+    
+    <!-- Tab: Diseño -->
+    <div class="admin-content" id="tab-design">
+      <div class="config-row">
+        <span class="config-label">Color del fondo:</span>
+        <input type="color" id="colorPicker" value="#0f1053" style="width:60px; height:40px; border:none; cursor:pointer; border-radius:8px;">
+        <span id="colorHexDisplay" style="color:white; margin-left:10px;">#0f1053</span>
+        <button onclick="cambiarColorTarjeta()" style="background:#4ade80; color:#000; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-family:'Funnel Display',sans-serif; margin-left:16px;">Aplicar Color</button>
+      </div>
+      <div class="config-row">
+        <span class="config-label">Tamaño nombre (px):</span>
+        <input type="number" id="configNameSize" value="18" class="form-group" style="margin:0; flex:1; max-width:80px;">
+      </div>
+      <div class="config-row">
+        <span class="config-label">Tamaño cargo (px):</span>
+        <input type="number" id="configTitleSize" value="12" class="form-group" style="margin:0; flex:1; max-width:80px;">
+      </div>
+      <button class="save-btn" onclick="saveDesign()">💾 Guardar todo</button>
+    </div>
+    
+    <!-- Tab: Países -->
+    <div class="admin-content" id="tab-countries">
+      <div style="margin-bottom: 20px;">
+        <div class="config-row">
+          <span class="config-label">Abreviación (ISO):</span>
+          <input type="text" id="newCountryCode" placeholder="BR" class="form-group" style="margin:0; flex:1; max-width:80px;" maxlength="3">
+        </div>
+        <div class="config-row">
+          <span class="config-label">Código telefónico:</span>
+          <input type="text" id="newCountryPhone" placeholder="+55" class="form-group" style="margin:0; flex:1; max-width:100px;">
+        </div>
+        <button class="save-btn" onclick="addCountry()">➕ Agregar país</button>
+      </div>
+      
+      <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 12px;">Lista de países:</div>
+      <div id="countriesList" style="max-height: 300px; overflow-y: auto;"></div>
+    </div>
+  </div>
+  
+  <!-- Formulario -->
+  <div class="form-section">
+    <div class="form-title">Datos de contacto</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nombre <span style="color: rgba(255,255,255,0.3); font-size: 0.75rem;">(máx 30)</span></label>
+        <input type="text" id="nombre" placeholder="John Smith" oninput="updateCard()" maxlength="30">
+      </div>
+      <div class="form-group">
+        <label>Cargo <span style="color: rgba(255,255,255,0.3); font-size: 0.75rem;">(máx 40)</span></label>
+        <input type="text" id="cargo" placeholder="Project Manager" oninput="updateCard()" maxlength="40">
+      </div>
+      <div class="form-group">
+        <label>Teléfono <span style="color: rgba(255,255,255,0.3); font-size: 0.75rem;">(máx 15)</span></label>
+        <div style="display: flex; gap: 8px;">
+          <select id="pais" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 12px; color: white; font-family: 'Funnel Display', sans-serif; font-size: 0.9rem; min-width: 140px;" onchange="updateCard()">
+            <!-- Se carga dinámicamente -->
+          </select>
+          <input type="text" id="telefono" placeholder="55 123 4567" oninput="updateCard()" style="flex: 1;" maxlength="15">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email <span style="color: rgba(255,255,255,0.3); font-size: 0.75rem;">(máx 35)</span></label>
+        <input type="email" id="email" placeholder="john.smith@proctek.com" oninput="updateCard()" maxlength="35">
+      </div>
+    </div>
+  </div>
+  
+  <!-- Admin Panel -->
+  <div class="form-section admin-section">
+    <div class="form-title">⚙️ Personalización</div>
+    <div class="admin-grid">
+      <div class="form-group">
+        <label>Color del frente</label>
+        <p style="color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-bottom: 8px;">Ajusta el tono para calibrar con tu imprenta</p>
+        <div class="color-options">
+          <button class="color-btn" data-color="#0a0b38" onclick="setFrontColor('#0a0b38')" style="background:#0a0b38;" title="Azul -20%"></button>
+          <button class="color-btn" data-color="#0c0e45" onclick="setFrontColor('#0c0e45')" style="background:#0c0e45;" title="Azul -10%"></button>
+          <button class="color-btn active" data-color="#0f1053" onclick="setFrontColor('#0f1053')" style="background:#0f1053;" title="Azul PROCTEK"></button>
+          <button class="color-btn" data-color="#121461" onclick="setFrontColor('#121461')" style="background:#121461;" title="Azul +10%"></button>
+          <button class="color-btn" data-color="#161970" onclick="setFrontColor('#161970')" style="background:#161970;" title="Azul +20%"></button>
+          <button class="color-btn" data-color="#1a1d7f" onclick="setFrontColor('#1a1d7f')" style="background:#1a1d7f;" title="Azul +30%"></button>
+          <input type="color" id="customColor" value="#0f1053" onchange="setFrontColor(this.value)" oninput="document.getElementById('hexValue').value=this.value" title="Color personalizado">
+          <input type="text" id="hexValue" value="#0f1053" maxlength="7" style="width:80px; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.1); color:white; font-family:monospace; text-transform:uppercase;" onchange="if(this.value.match(/^#[0-9A-Fa-f]{6}$/)){setFrontColor(this.value);document.getElementById('customColor').value=this.value;}">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Vista previa -->
+  <div class="cards-section">
+    
+    <!-- FRENTE -->
+    <div>
+      <div class="card-label">FRENTE</div>
+      <div class="card-front">
+        <svg class="icon" viewBox="280 175 85 95" fill="white">
+          <path d="M361.44,232.85c-5.74,2.77-11.66,4.6-17.99,5.56-2.47.38-4.59.36-6.99.49-7.21.42-14.22.22-21.19-1.2-12.39-2.53-25.8-8.61-33.51-19.01-.04.78-.07,1.56-.07,2.35,0,9.68,3.33,18.59,8.9,25.64,5.7,3,13.18,4.52,19.4,4.93.48.03,8.47-.14,11.55-.44,3.22-.3,6.22-.96,9.38-1.73,6.93-1.7,14.09-4.74,20.24-8.57,2.93-1.82,5.78-3.79,8.47-5.93.19-.02-.15.35-.29.51-2.59,3.08-6.06,6.17-9.37,8.47-10.29,7.16-24.88,12.27-37.5,12.51-.82.02-9.62-.3-12-.72,6.5,4.25,14.26,6.72,22.6,6.72,19.03,0,35.05-12.84,39.89-30.33l-1.54.75Z"/>
+          <path d="M310.33,203.31c12.2,14.58,31.7,23.52,50.2,23.74.05,0,.1,0,.16,0l3.4-.28c.26-1.87.4-3.78.4-5.72,0-22.86-18.53-41.39-41.39-41.39-7.81,0-15.12,2.17-21.36,5.93,0,0,0,0,0,0,.86,6.22,3.58,11.72,8.6,17.71Z"/>
+          <path d="M295.7,223.36c12.78,9.51,29.91,12.83,45.6,12.31.95-.03,4.91-.22,6.25-.47,3.3-.62,6.55-1.2,9.83-2.02,2.1-.52,3.89-1.12,5.81-1.83.35-1.36.63-2.75.84-4.16-.57.14-1.14.29-1.7.4-1.57.31-3.09.45-4.63.63-10.83,1.26-22.34-1.39-32.29-5.9-12.42-5.64-26.79-17.02-28.92-31.33l-.22-1.45c-5.83,4.97-10.26,11.53-12.63,19,2.19,5.47,6.36,10.57,12.07,14.82Z"/>
+        </svg>
+        <svg class="brand" viewBox="125 285 395 35" fill="white">
+          <path d="M244.36,312.48l-7.95-6.13h.26c2.29,0,4.29-.72,5.93-2.14,1.68-1.44,2.56-3.32,2.64-5.58.11-2.38-.68-4.51-2.34-6.33-1.67-1.83-3.7-2.76-6.03-2.76h-33.54c-.44,0-.84.15-1.16.44-.35.31-.53.73-.53,1.2v1.83c0,.91.32,1.69.95,2.32.63.63,1.41.95,2.32.95h32.2c.27,0,.68.06,1.16.6.39.44.59.89.6,1.39.01.47-.14.86-.48,1.2-.33.35-.71.51-1.18.51h-32.29c-.91,0-1.69.32-2.32.95-.63.63-.95,1.41-.95,2.32v11.45c0,.46.17.87.49,1.19.32.33.74.5,1.19.5h1.44c.91,0,1.69-.32,2.32-.95.63-.63.95-1.41.95-2.32v-6.78h16.6c.9,0,1.69.27,2.4.83l10.46,8.1c1.01.75,2.18,1.13,3.45,1.13h2.12c.62,0,1.18-.24,1.62-.71.46-.49.64-1.1.55-1.74-.05-.6-.36-1.11-.88-1.49Z"/>
+          <path d="M282.32,289.55h-17.9c-3.53,0-6.58,1.27-9.09,3.77-2.5,2.5-3.77,5.56-3.77,9.09v1.16c0,3.53,1.27,6.59,3.77,9.09,2.5,2.5,5.56,3.77,9.09,3.77h17.9c3.53,0,6.59-1.27,9.09-3.77s3.77-5.56,3.77-9.09v-1.16c0-3.53-1.27-6.58-3.77-9.09-2.5-2.5-5.56-3.77-9.09-3.77ZM282.71,309.67h-18.67c-1.7,0-3.1-.58-4.29-1.79-1.19-1.21-1.77-2.62-1.77-4.32v-1.16c0-1.7.58-3.12,1.77-4.32,1.19-1.2,2.59-1.79,4.29-1.79h18.67c1.7,0,3.11.59,4.32,1.79,1.2,1.21,1.79,2.62,1.79,4.32v1.16c0,1.7-.59,3.11-1.79,4.32-1.2,1.2-2.62,1.79-4.32,1.79Z"/>
+          <path d="M343.73,289.55h-29.12c-3.53,0-6.58,1.27-9.09,3.77-2.5,2.5-3.77,5.56-3.77,9.09v1.16c0,3.53,1.27,6.59,3.77,9.09,2.5,2.5,5.56,3.77,9.09,3.77h29.12c.48,0,.89-.18,1.2-.53.29-.32.44-.72.44-1.16v-1.83c0-.88-.32-1.64-.95-2.28-.63-.63-1.4-.95-2.27-.95h-27.91c-1.7,0-3.1-.58-4.29-1.79-1.19-1.21-1.77-2.62-1.77-4.32v-1.16c0-1.7.58-3.12,1.77-4.32,1.19-1.2,2.59-1.79,4.29-1.79h27.91c.88,0,1.64-.32,2.28-.95.63-.63.95-1.41.95-2.32v-1.83c0-.46-.16-.86-.47-1.17-.31-.31-.71-.47-1.17-.47Z"/>
+          <path d="M393.55,289.55h-38.69c-.91,0-1.69.32-2.32.95-.63.63-.95,1.4-.95,2.28v1.88c0,.43.17.82.49,1.14.32.33.74.5,1.19.5h16.94v18.43c0,.46.17.87.49,1.19.32.33.72.5,1.15.5h1.49c.87,0,1.64-.32,2.29-.94.66-.63.99-1.42.99-2.33v-16.84h15.35c.88,0,1.64-.32,2.28-.95.63-.63.95-1.41.95-2.32v-1.83c0-.46-.16-.86-.47-1.17s-.71-.47-1.17-.47Z"/>
+          <path d="M443.62,289.55h-29.12c-3.53,0-6.58,1.27-9.09,3.77-2.5,2.5-3.77,5.56-3.77,9.09v1.16c0,3.53,1.27,6.59,3.77,9.09,2.5,2.5,5.56,3.77,9.09,3.77h29.12c.48,0,.89-.18,1.2-.53.29-.32.44-.72.44-1.16v-1.83c0-.88-.32-1.64-.95-2.28-.63-.63-1.4-.95-2.27-.95h-27.91c-1.7,0-3.1-.58-4.29-1.79-.58-.58-1.01-1.22-1.3-1.91h28.18c1.01,0,1.91-.29,2.67-.87.83-.63,1.26-1.46,1.26-2.4v-1.44c0-.51-.24-.96-.68-1.26-.35-.25-.77-.38-1.24-.38h-30.02c.28-.55.66-1.06,1.12-1.53,1.19-1.2,2.59-1.79,4.29-1.79h27.91c.88,0,1.64-.32,2.28-.95.63-.63.95-1.41.95-2.32v-1.83c0-.46-.16-.86-.47-1.17-.31-.31-.71-.47-1.17-.47Z"/>
+          <path d="M494.12,312.49l-12.39-9.51,12.4-9.57c.53-.42.81-1.01.81-1.69,0-.62-.23-1.17-.66-1.57-.42-.39-.94-.6-1.51-.6h-2.17c-1.24,0-2.39.38-3.42,1.14l-11.5,8.9h-17.94s0-6.82,0-6.82c0-.88-.32-1.64-.95-2.28-.63-.63-1.41-.95-2.32-.95h-1.44c-.44,0-.84.15-1.16.44-.35.31-.53.73-.53,1.2v23.53c0,.46.17.87.49,1.19.32.33.74.5,1.19.5h1.44c.91,0,1.69-.32,2.32-.95.63-.63.95-1.41.95-2.32v-6.78h17.95s11.5,8.86,11.5,8.86c1.02.79,2.19,1.19,3.47,1.19h2.12c.62,0,1.17-.23,1.57-.66.39-.42.6-.94.6-1.51,0-.71-.28-1.31-.82-1.75Z"/>
+          <path d="M186.48,289.55h-33.54c-.44,0-.84.15-1.16.44-.35.31-.53.73-.53,1.2v1.83c0,.91.32,1.69.95,2.32.63.63,1.41.95,2.32.95h32.29c.26,0,.66.06,1.12.6.38.45.47.93.47,1.32,0,.44-.06.95-.39,1.28s-.71.49-1.19.49l-31.91.18c-.91,0-2.07.14-2.7.77-.63.63-.95,1.41-.95,2.32v11.45c0,.46.17.87.49,1.19.32.33.74.5,1.19.5h1.44c.91,0,1.69-.32,2.32-.95.63-.63.95-1.41.95-2.32v-6.78h28.82c2.3,0,4.29-.76,5.91-2.25,1.64-1.51,2.47-3.44,2.47-5.74s-.82-4.4-2.45-6.15c-1.64-1.77-3.64-2.66-5.93-2.66Z"/>
+          <path d="M515,311.28v.47c0,2.6-2.12,4.72-4.72,4.72h-2.77c-2.6,0-4.72-2.12-4.72-4.72v-.47c0-2.6,2.12-4.72,4.72-4.72h2.77c2.6,0,4.72,2.12,4.72,4.72ZM513.43,311.27c0-1.65-1.34-2.99-2.99-2.99h-3.08c-1.65,0-2.99,1.34-2.99,2.99v.48c0,1.65,1.34,2.99,2.99,2.99h3.08c1.65,0,2.99-1.34,2.99-2.99v-.48Z"/>
+        </svg>
+        <svg class="tagline" viewBox="0 0 16130 1100" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.7)">
+          <g transform="translate(0, 850) scale(1, -1)">
+            <path d="M387 -12Q234 -12 143.0 55.0Q52 122 43 240H146Q148 160 211.5 116.0Q275 72 390 72Q491 72 545.5 109.0Q600 146 600 218Q600 274 561.5 310.5Q523 347 448 361L297 390Q195 410 140.0 464.0Q85 518 85 598Q85 701 162.0 761.5Q239 822 371 822Q505 822 589.5 758.5Q674 695 688 582H585Q554 738 366 738Q278 738 228.5 703.5Q179 669 179 605Q179 501 327 472L484 441Q587 421 640.5 366.0Q694 311 694 225Q694 113 612.0 50.5Q530 -12 387 -12Z" transform="translate(0, 0)"/>
+            <path d="M106 0V500H56V600H160V510H210Q234 559 283.0 585.0Q332 611 400 611Q470 611 519.5 582.0Q569 553 598 492H601Q662 611 809 611Q917 611 977.5 548.5Q1038 486 1038 375V0H944V363Q944 529 781 529Q619 529 619 363V0H525V363Q525 529 362 529Q283 529 241.5 486.5Q200 444 200 363V0Z" transform="translate(760, 0)"/>
+            <path d="M258 -11Q158 -11 100.0 39.5Q42 90 42 170Q42 256 98.5 303.0Q155 350 262 350H478V378Q478 532 313 532Q179 532 152 430H56Q70 516 139.5 564.0Q209 612 316 612Q438 612 503.0 553.5Q568 495 568 385V100H614V0H510V90H468Q437 44 382.0 16.5Q327 -11 258 -11ZM270 67Q327 67 374.5 91.0Q422 115 450.0 155.5Q478 196 478 245V278H269Q130 278 130 174Q130 125 167.5 96.0Q205 67 270 67Z" transform="translate(1880, 0)"/>
+            <path d="M118 0V500H68V600H172V490H214Q240 543 292.5 573.5Q345 604 417 604H466V524H412Q318 524 265.0 468.0Q212 412 212 316V0Z" transform="translate(2550, 0)"/>
+            <path d="M222 0Q180 0 156.5 21.5Q133 43 133 86V528H18V600H134V780H226V600H390V528H227V74H406V0Z" transform="translate(3040, 0)"/>
+            <path d="M660 0H104V810H660V728H200V460H639V380H200V82H660Z" transform="translate(3770, 0)"/>
+            <path d="M106 0V500H56V600H160V510H202Q232 560 286.5 585.5Q341 611 411 611Q524 611 591.0 545.0Q658 479 658 369V0H564V355Q564 440 517.5 484.5Q471 529 382 529Q294 529 247.0 484.5Q200 440 200 355V0Z" transform="translate(4480, 0)"/>
+            <path d="M335 -252Q214 -252 138.0 -201.0Q62 -150 48 -60H148Q176 -170 335 -170Q434 -170 487.0 -123.0Q540 -76 540 12V114H535Q512 60 458.0 30.0Q404 0 332 0Q246 0 183.0 37.5Q120 75 86.0 143.5Q52 212 52 306Q52 447 128.0 529.5Q204 612 334 612Q406 612 457.0 586.0Q508 560 538 510H580V600H684V500H634V5Q634 -116 555.5 -184.0Q477 -252 335 -252ZM354 82Q437 82 488.5 131.0Q540 180 540 260V352Q540 432 488.5 481.0Q437 530 354 530Q257 530 201.5 471.0Q146 412 146 306Q146 200 201.5 141.0Q257 82 354 82Z" transform="translate(5220, 0)"/>
+            <path d="M93 0V600H187V0ZM140 690Q115 690 97.5 707.5Q80 725 80 750Q80 775 97.5 792.5Q115 810 140 810Q165 810 182.5 792.5Q200 775 200 750Q200 725 182.5 707.5Q165 690 140 690Z" transform="translate(5960, 0)"/>
+            <path d="M106 0V500H56V600H160V510H202Q232 560 286.5 585.5Q341 611 411 611Q524 611 591.0 545.0Q658 479 658 369V0H564V355Q564 440 517.5 484.5Q471 529 382 529Q294 529 247.0 484.5Q200 440 200 355V0Z" transform="translate(6240, 0)"/>
+            <path d="M354 -12Q262 -12 194.0 26.5Q126 65 89.0 136.0Q52 207 52 302Q52 397 89.0 466.5Q126 536 193.0 574.0Q260 612 350 612Q435 612 497.0 577.5Q559 543 593.5 480.0Q628 417 628 331V289H142Q146 186 202.5 128.0Q259 70 353 70Q418 70 463.5 98.0Q509 126 526 179H622Q599 88 528.5 38.0Q458 -12 354 -12ZM147 361H537Q530 442 480.0 487.0Q430 532 349 532Q268 532 214.5 487.0Q161 442 147 361Z" transform="translate(6980, 0)"/>
+            <path d="M354 -12Q262 -12 194.0 26.5Q126 65 89.0 136.0Q52 207 52 302Q52 397 89.0 466.5Q126 536 193.0 574.0Q260 612 350 612Q435 612 497.0 577.5Q559 543 593.5 480.0Q628 417 628 331V289H142Q146 186 202.5 128.0Q259 70 353 70Q418 70 463.5 98.0Q509 126 526 179H622Q599 88 528.5 38.0Q458 -12 354 -12ZM147 361H537Q530 442 480.0 487.0Q430 532 349 532Q268 532 214.5 487.0Q161 442 147 361Z" transform="translate(7660, 0)"/>
+            <path d="M118 0V500H68V600H172V490H214Q240 543 292.5 573.5Q345 604 417 604H466V524H412Q318 524 265.0 468.0Q212 412 212 316V0Z" transform="translate(8340, 0)"/>
+            <path d="M93 0V600H187V0ZM140 690Q115 690 97.5 707.5Q80 725 80 750Q80 775 97.5 792.5Q115 810 140 810Q165 810 182.5 792.5Q200 775 200 750Q200 725 182.5 707.5Q165 690 140 690Z" transform="translate(8830, 0)"/>
+            <path d="M106 0V500H56V600H160V510H202Q232 560 286.5 585.5Q341 611 411 611Q524 611 591.0 545.0Q658 479 658 369V0H564V355Q564 440 517.5 484.5Q471 529 382 529Q294 529 247.0 484.5Q200 440 200 355V0Z" transform="translate(9110, 0)"/>
+            <path d="M335 -252Q214 -252 138.0 -201.0Q62 -150 48 -60H148Q176 -170 335 -170Q434 -170 487.0 -123.0Q540 -76 540 12V114H535Q512 60 458.0 30.0Q404 0 332 0Q246 0 183.0 37.5Q120 75 86.0 143.5Q52 212 52 306Q52 447 128.0 529.5Q204 612 334 612Q406 612 457.0 586.0Q508 560 538 510H580V600H684V500H634V5Q634 -116 555.5 -184.0Q477 -252 335 -252ZM354 82Q437 82 488.5 131.0Q540 180 540 260V352Q540 432 488.5 481.0Q437 530 354 530Q257 530 201.5 471.0Q146 412 146 306Q146 200 201.5 141.0Q257 82 354 82Z" transform="translate(9850, 0)"/>
+            <path d="M387 -12Q234 -12 143.0 55.0Q52 122 43 240H146Q148 160 211.5 116.0Q275 72 390 72Q491 72 545.5 109.0Q600 146 600 218Q600 274 561.5 310.5Q523 347 448 361L297 390Q195 410 140.0 464.0Q85 518 85 598Q85 701 162.0 761.5Q239 822 371 822Q505 822 589.5 758.5Q674 695 688 582H585Q554 738 366 738Q278 738 228.5 703.5Q179 669 179 605Q179 501 327 472L484 441Q587 421 640.5 366.0Q694 311 694 225Q694 113 612.0 50.5Q530 -12 387 -12Z" transform="translate(10890, 0)"/>
+            <path d="M355 -12Q263 -12 195.0 26.5Q127 65 89.5 135.0Q52 205 52 300Q52 395 89.0 465.0Q126 535 194.5 573.5Q263 612 355 612Q449 612 516.5 574.0Q584 536 621.0 466.0Q658 396 658 300Q658 205 621.0 134.5Q584 64 516.0 26.0Q448 -12 355 -12ZM355 70Q454 70 509.0 130.5Q564 191 564 300Q564 410 509.0 470.0Q454 530 355 530Q257 530 201.5 469.5Q146 409 146 300Q146 191 201.5 130.5Q257 70 355 70Z" transform="translate(11650, 0)"/>
+            <path d="M93 0V840H187V0Z" transform="translate(12360, 0)"/>
+            <path d="M326 -11Q214 -11 148.0 53.0Q82 117 82 225V600H176V245Q176 160 221.0 115.5Q266 71 351 71Q440 71 490.0 117.0Q540 163 540 245V600H634V100H684V0H580V90H538Q507 41 452.5 15.0Q398 -11 326 -11Z" transform="translate(12640, 0)"/>
+            <path d="M222 0Q180 0 156.5 21.5Q133 43 133 86V528H18V600H134V780H226V600H390V528H227V74H406V0Z" transform="translate(13380, 0)"/>
+            <path d="M93 0V600H187V0ZM140 690Q115 690 97.5 707.5Q80 725 80 750Q80 775 97.5 792.5Q115 810 140 810Q165 810 182.5 792.5Q200 775 200 750Q200 725 182.5 707.5Q165 690 140 690Z" transform="translate(13810, 0)"/>
+            <path d="M355 -12Q263 -12 195.0 26.5Q127 65 89.5 135.0Q52 205 52 300Q52 395 89.0 465.0Q126 535 194.5 573.5Q263 612 355 612Q449 612 516.5 574.0Q584 536 621.0 466.0Q658 396 658 300Q658 205 621.0 134.5Q584 64 516.0 26.0Q448 -12 355 -12ZM355 70Q454 70 509.0 130.5Q564 191 564 300Q564 410 509.0 470.0Q454 530 355 530Q257 530 201.5 469.5Q146 409 146 300Q146 191 201.5 130.5Q257 70 355 70Z" transform="translate(14090, 0)"/>
+            <path d="M106 0V500H56V600H160V510H202Q232 560 286.5 585.5Q341 611 411 611Q524 611 591.0 545.0Q658 479 658 369V0H564V355Q564 440 517.5 484.5Q471 529 382 529Q294 529 247.0 484.5Q200 440 200 355V0Z" transform="translate(14800, 0)"/>
+            <path d="M309 -12Q187 -12 116.0 38.5Q45 89 38 180H132Q139 122 183.0 94.0Q227 66 312 66Q465 66 465 164Q465 204 441.5 225.5Q418 247 362 257L231 281Q68 311 68 437Q68 518 129.0 565.0Q190 612 296 612Q405 612 470.5 564.0Q536 516 546 430H454Q443 483 404.0 508.5Q365 534 295 534Q228 534 192.0 510.5Q156 487 156 442Q156 408 179.5 388.5Q203 369 256 359L386 335Q472 319 512.0 279.0Q552 239 552 171Q552 84 489.0 36.0Q426 -12 309 -12Z" transform="translate(15540, 0)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- REVERSO -->
+    <div>
+      <div class="card-label">REVERSO</div>
+      <div class="card-back">
+        <!-- Logo PROCTEK azul -->
+        <svg class="logo-top" viewBox="0 0 72.08 12.39">
+          <g>
+            <path class="azul" fill="#0f1053" d="M11.94,7.96c-.86.42-1.75.69-2.69.83-.37.06-.69.05-1.05.07-1.08.06-2.13.03-3.17-.18C3.17,8.31,1.16,7.4.01,5.84c0,.12-.01.23-.01.35,0,1.45.5,2.78,1.33,3.84.85.45,1.97.68,2.9.74.07,0,1.27-.02,1.73-.07.48-.05.93-.14,1.4-.26,1.04-.25,2.11-.71,3.03-1.28.44-.27.87-.57,1.27-.89.03,0-.02.05-.04.08-.39.46-.91.92-1.4,1.27-1.54,1.07-3.72,1.84-5.61,1.87-.12,0-1.44-.05-1.8-.11.97.64,2.14,1.01,3.38,1.01,2.85,0,5.25-1.92,5.97-4.54l-.23.11Z"/>
+            <path class="azul" fill="#0f1053" d="M4.28,3.54c1.83,2.18,4.75,3.52,7.51,3.55,0,0,.02,0,.02,0l.51-.04c.04-.28.06-.57.06-.86,0-3.42-2.77-6.2-6.2-6.2-1.17,0-2.26.32-3.2.89,0,0,0,0,0,0,.13.93.54,1.76,1.29,2.65Z"/>
+            <path class="azul" fill="#0f1053" d="M2.09,6.54c1.91,1.42,4.48,1.92,6.83,1.84.14,0,.74-.03.94-.07.49-.09.98-.18,1.47-.3.31-.08.58-.17.87-.27.05-.2.09-.41.13-.62-.09.02-.17.04-.25.06-.24.05-.46.07-.69.09-1.62.19-3.34-.21-4.83-.88-1.86-.84-4.01-2.55-4.33-4.69l-.03-.22c-.87.74-1.54,1.73-1.89,2.84.33.82.95,1.58,1.81,2.22Z"/>
+            <path class="azul" fill="#0f1053" d="M30.75,7.64l-1.21-.94h.04c.35,0,.65-.11.91-.33.26-.22.39-.51.4-.85.02-.36-.1-.69-.36-.97-.26-.28-.57-.42-.92-.42h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.92s.1,0,.18.09c.06.07.09.14.09.21,0,.07-.02.13-.07.18-.05.05-.11.08-.18.08h-4.93c-.14,0-.26.05-.35.15-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.53c.14,0,.26.04.37.13l1.6,1.24c.15.11.33.17.53.17h.32c.1,0,.18-.04.25-.11.07-.07.1-.17.08-.26,0-.09-.05-.17-.13-.23Z"/>
+            <path class="azul" fill="#0f1053" d="M36.55,4.14h-2.73c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h2.73c.54,0,1.01-.19,1.39-.58s.58-.85.58-1.39v-.18c0-.54-.19-1.01-.58-1.39-.38-.38-.85-.58-1.39-.58ZM36.6,7.21h-2.85c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h2.85c.26,0,.48.09.66.27.18.18.27.4.27.66v.18c0,.26-.09.48-.27.66-.18.18-.4.27-.66.27Z"/>
+            <path class="azul" fill="#0f1053" d="M45.92,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
+            <path class="azul" fill="#0f1053" d="M53.53,4.14h-5.91c-.14,0-.26.05-.35.15-.1.1-.15.21-.15.35v.29c0,.07.03.13.08.17.05.05.11.08.18.08h2.59v2.81c0,.07.03.13.08.18.05.05.11.08.17.08h.23c.13,0,.25-.05.35-.14.1-.1.15-.22.15-.36v-2.57h2.34c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18s-.11-.07-.18-.07Z"/>
+            <path class="azul" fill="#0f1053" d="M61.17,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.09-.09-.15-.19-.2-.29h4.3c.15,0,.29-.04.41-.13.13-.1.19-.22.19-.37v-.22c0-.08-.04-.15-.1-.19-.05-.04-.12-.06-.19-.06h-4.58c.04-.08.1-.16.17-.23.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
+            <path class="azul" fill="#0f1053" d="M68.88,7.64l-1.89-1.45,1.89-1.46c.08-.06.12-.15.12-.26,0-.1-.03-.18-.1-.24-.06-.06-.14-.09-.23-.09h-.33c-.19,0-.36.06-.52.17l-1.76,1.36h-2.74s0-1.04,0-1.04c0-.13-.05-.25-.15-.35-.1-.1-.22-.15-.35-.15h-.22c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v3.59c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.74s1.76,1.35,1.76,1.35c.16.12.33.18.53.18h.32c.1,0,.18-.03.24-.1.06-.06.09-.14.09-.23,0-.11-.04-.2-.13-.27Z"/>
+            <path class="azul" fill="#0f1053" d="M21.91,4.14h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.93s.1,0,.17.09c.06.07.09.14.09.22,0,.07-.02.12-.07.17s-.11.07-.18.07l-4.87.03c-.14,0-.32.02-.41.12-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h4.4c.35,0,.65-.12.9-.34.25-.23.38-.53.38-.88s-.13-.67-.37-.94c-.25-.27-.56-.41-.91-.41Z"/>
+            <path class="azul" fill="#0f1053" d="M72.08,7.48v.07c0,.4-.32.72-.72.72h-.42c-.4,0-.72-.32-.72-.72v-.07c0-.4.32-.72.72-.72h.42c.4,0,.72.32.72.72ZM71.84,7.48c0-.25-.2-.46-.46-.46h-.47c-.25,0-.46.21-.46.46v.07c0,.25.21.46.46.46h.47c.25,0,.46-.21.46-.46v-.07Z"/>
+          </g>
+        </svg>
+        
+        <!-- Info de contacto -->
+        <div class="contact-info">
+          <div class="name" id="preview-nombre">John Smith</div>
+          <div class="title" id="preview-cargo">Project Manager</div>
+          <div class="phone" id="preview-telefono">(+593) 55 123 4567</div>
+          <div class="email" id="preview-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="53393c3b3d7d203e3a273b1323213c302736387d303c3e">[email&#160;protected]</a></div>
+        </div>
+        
+        <!-- Footer izquierda -->
+        <div class="footer-left">
+          <div class="more-info">more information at</div>
+          <div class="website">www.proctek.com</div>
+        </div>
+        
+        <!-- Footer derecha -->
+        <svg class="footer-right" viewBox="0 0 71.2 9.85">
+          <defs><style>.gris{fill:#969696;}</style></defs>
+          <g>
+            <path class="gris" d="M17.69,6.67h-2.31v-3.31h2.31v.4h-1.84v1h1.74v.39h-1.74v1.12h1.84v.4Z"/>
+            <path class="gris" d="M18.21,6.67v-1.98h-.24v-.47h.49v.38h.17c.08-.14.2-.24.35-.31.15-.07.32-.11.52-.11.32,0,.57.09.75.27.18.18.27.42.27.73v1.5h-.46v-1.42c0-.22-.06-.39-.18-.5-.12-.11-.29-.17-.52-.17s-.4.06-.52.17c-.12.11-.18.28-.18.5v1.42h-.46Z"/>
+            <path class="gris" d="M22.11,7.7c-.34,0-.62-.07-.83-.21-.21-.14-.34-.34-.38-.59h.48c.07.28.31.42.72.42.26,0,.45-.06.59-.18.14-.12.2-.29.2-.52v-.4h-.02c-.07.14-.17.26-.31.33-.14.08-.31.12-.5.12-.23,0-.43-.05-.61-.15-.17-.1-.3-.25-.4-.43-.09-.19-.14-.41-.14-.66,0-.38.1-.69.31-.91.21-.22.49-.34.85-.34.2,0,.37.04.51.11s.25.18.34.32h.17v-.38h.49v.47h-.24v1.95c0,.34-.11.6-.33.78-.22.19-.52.28-.91.28ZM22.17,6.27c.22,0,.39-.06.52-.19.13-.13.2-.29.2-.5v-.33c0-.21-.07-.37-.2-.5s-.31-.19-.52-.19c-.25,0-.44.07-.58.22-.14.15-.21.36-.21.63s.07.48.21.63c.14.15.33.22.58.22Z"/>
+            <path class="gris" d="M24.25,3.88c-.08,0-.14-.03-.2-.08-.05-.05-.08-.12-.08-.2s.03-.14.08-.2.12-.08.2-.08.14.03.2.08.08.12.08.2-.03.14-.08.2c-.05.05-.12.08-.2.08ZM24.02,6.67v-2.45h.46v2.45h-.46Z"/>
+            <path class="gris" d="M25.15,6.67v-1.98h-.24v-.47h.49v.38h.17c.08-.14.2-.24.35-.31.15-.07.32-.11.52-.11.32,0,.57.09.75.27.18.18.27.42.27.73v1.5h-.46v-1.42c0-.22-.06-.39-.18-.5-.12-.11-.29-.17-.52-.17s-.4.06-.52.17c-.12.11-.18.28-.18.5v1.42h-.46Z"/>
+            <path class="gris" d="M29.11,6.72c-.26,0-.48-.05-.67-.16-.19-.11-.33-.25-.44-.45-.1-.19-.15-.42-.15-.68s.05-.48.15-.67c.1-.19.25-.34.43-.44.19-.1.4-.16.65-.16s.44.05.62.14c.17.1.31.23.4.4.1.17.14.38.14.62v.18h-1.95c.01.26.09.46.23.6.14.14.33.21.57.21.17,0,.31-.03.42-.1s.19-.17.24-.31h.47c-.06.25-.19.45-.39.59-.2.14-.44.21-.73.21ZM28.31,5.18h1.5c-.02-.2-.1-.36-.22-.47-.13-.11-.29-.17-.5-.17s-.37.06-.51.17c-.14.11-.22.27-.26.47Z"/>
+            <path class="gris" d="M31.77,6.72c-.26,0-.48-.05-.67-.16-.19-.11-.33-.25-.44-.45-.1-.19-.15-.42-.15-.68s.05-.48.15-.67c.1-.19.25-.34.43-.44.19-.1.4-.16.65-.16s.44.05.62.14c.17.1.31.23.4.4.1.17.14.38.14.62v.18h-1.96c.01.26.09.46.24.6.14.14.33.21.57.21.17,0,.31-.03.42-.1s.19-.17.24-.31h.47c-.06.25-.19.45-.39.59-.2.14-.44.21-.73.21ZM30.97,5.18h1.5c-.02-.2-.1-.36-.22-.47-.13-.11-.29-.17-.5-.17s-.37.06-.51.17c-.14.11-.22.27-.26.47Z"/>
+            <path class="gris" d="M33.46,6.67v-1.98h-.24v-.47h.49v.46h.17c.07-.15.17-.27.32-.35.14-.08.31-.13.51-.13h.2v.39h-.22c-.25,0-.44.07-.57.22-.13.14-.2.34-.2.58v1.28h-.45Z"/>
+            <path class="gris" d="M35.47,3.88c-.08,0-.14-.03-.2-.08-.05-.05-.08-.12-.08-.2s.03-.14.08-.2c.05-.05.12-.08.2-.08s.14.03.2.08c.05.05.08.12.08.2s-.03.14-.08.2c-.05.05-.12.08-.2.08ZM35.24,6.67v-2.45h.46v2.45h-.46Z"/>
+            <path class="gris" d="M36.37,6.67v-1.98h-.24v-.47h.49v.38h.17c.08-.14.2-.24.35-.31.15-.07.32-.11.52-.11.32,0,.57.09.75.27.18.18.27.42.27.73v1.5h-.46v-1.42c0-.22-.06-.39-.18-.5-.12-.11-.29-.17-.52-.17s-.4.06-.52.17c-.12.11-.18.28-.18.5v1.42h-.46Z"/>
+            <path class="gris" d="M40.26,7.7c-.34,0-.62-.07-.83-.21s-.34-.34-.38-.59h.48c.07.28.31.42.72.42.26,0,.45-.06.59-.18.14-.12.2-.29.2-.52v-.4h-.02c-.07.14-.17.26-.31.33s-.31.12-.5.12c-.23,0-.43-.05-.61-.15-.17-.1-.3-.25-.4-.43-.09-.19-.14-.41-.14-.66,0-.38.1-.69.31-.91s.49-.34.85-.34c.2,0,.37.04.51.11s.25.18.34.32h.17v-.38h.49v.47h-.24v1.95c0,.34-.11.6-.33.78-.22.19-.52.28-.91.28ZM40.33,6.27c.22,0,.39-.06.52-.19.13-.13.2-.29.2-.5v-.33c0-.21-.07-.37-.2-.5s-.31-.19-.52-.19c-.25,0-.44.07-.58.22-.14.15-.21.36-.21.63s.07.48.21.63c.14.15.34.22.58.22Z"/>
+            <path class="gris" d="M43.85,6.67c-.13,0-.23-.03-.3-.1-.07-.07-.11-.17-.11-.3v-1.7h-.46v-.35h.46v-.74h.45v.74h.64v.35h-.64v1.74h.7v.36h-.75Z"/>
+            <path class="gris" d="M44.91,6.67v-3.44h.46v1.37h.02c.08-.14.19-.25.33-.33.14-.07.31-.11.5-.11.31,0,.55.09.73.27.18.18.27.42.27.73v1.5h-.46v-1.42c0-.22-.06-.39-.18-.5-.12-.11-.29-.17-.52-.17s-.4.06-.52.17c-.12.11-.18.28-.18.5v1.42h-.46Z"/>
+            <path class="gris" d="M48.86,6.72c-.26,0-.48-.05-.67-.16-.19-.11-.33-.25-.44-.45-.1-.19-.15-.42-.15-.68s.05-.48.15-.67c.1-.19.25-.34.43-.44.19-.1.4-.16.65-.16s.44.05.62.14c.17.1.31.23.4.4.1.17.14.38.14.62v.18h-1.95c.01.26.09.46.23.6.14.14.33.21.57.21.17,0,.31-.03.42-.1s.19-.17.24-.31h.47c-.06.25-.19.45-.39.59-.2.14-.44.21-.73.21ZM48.07,5.18h1.5c-.02-.2-.1-.36-.22-.47-.13-.11-.29-.17-.5-.17s-.37.06-.51.17c-.14.11-.22.27-.26.47Z"/>
+            <path class="gris" d="M52.61,6.72c-.26,0-.48-.05-.67-.16-.19-.11-.33-.25-.44-.45-.1-.19-.15-.42-.15-.68s.05-.48.15-.67c.1-.19.25-.34.43-.44.19-.1.4-.16.65-.16s.44.05.62.14c.17.1.31.23.4.4.1.17.14.38.14.62v.18h-1.96c.01.26.09.46.24.6.14.14.33.21.57.21.17,0,.31-.03.42-.1s.19-.17.24-.31h.47c-.06.25-.19.45-.39.59-.2.14-.44.21-.73.21ZM51.81,5.18h1.5c-.02-.2-.1-.36-.22-.47-.13-.11-.29-.17-.5-.17s-.37.06-.51.17c-.14.11-.22.27-.26.47Z"/>
+            <path class="gris" d="M54.81,6.67l-1.05-2.45h.48l.82,1.98h.02l.81-1.98h.46l-1.05,2.45h-.5Z"/>
+            <path class="gris" d="M57.63,6.72c-.25,0-.48-.05-.66-.16-.19-.11-.34-.25-.44-.44-.1-.19-.16-.42-.16-.67s.05-.48.16-.67c.1-.19.25-.34.44-.44.19-.11.41-.16.66-.16s.49.05.67.16c.19.1.33.25.43.44s.15.42.15.68-.05.48-.15.68c-.1.19-.25.34-.44.44s-.41.16-.67.16ZM57.63,6.32c.25,0,.45-.08.59-.23.14-.15.21-.37.21-.64s-.07-.49-.21-.65c-.14-.15-.34-.23-.59-.23s-.45.08-.59.23c-.14.15-.21.37-.21.64s.07.49.21.64c.14.15.34.23.59.23Z"/>
+            <path class="gris" d="M59.31,6.67v-3.44h.46v3.44h-.46Z"/>
+            <path class="gris" d="M61.34,6.71c-.32,0-.56-.09-.74-.26-.18-.18-.27-.41-.27-.71v-1.53h.46v1.43c0,.22.06.39.17.5s.28.17.5.17c.23,0,.41-.06.54-.18s.19-.28.19-.5v-1.42h.46v1.98h.24v.47h-.49v-.38h-.17c-.09.14-.2.24-.35.31s-.32.11-.52.11Z"/>
+            <path class="gris" d="M63.9,6.67c-.13,0-.23-.03-.3-.1-.07-.07-.11-.17-.11-.3v-1.7h-.46v-.35h.46v-.74h.45v.74h.64v.35h-.64v1.74h.7v.36h-.75Z"/>
+            <path class="gris" d="M65.2,3.88c-.08,0-.14-.03-.2-.08-.05-.05-.08-.12-.08-.2s.03-.14.08-.2c.05-.05.12-.08.2-.08s.14.03.2.08.08.12.08.2-.03.14-.08.2c-.05.05-.12.08-.2.08ZM64.98,6.67v-2.45h.46v2.45h-.46Z"/>
+            <path class="gris" d="M67.12,6.72c-.25,0-.48-.05-.66-.16-.19-.11-.34-.25-.44-.44s-.16-.42-.16-.67.05-.48.16-.67.25-.34.44-.44c.19-.11.41-.16.66-.16s.49.05.67.16c.19.1.33.25.43.44.1.19.15.42.15.68s-.05.48-.15.68c-.1.19-.25.34-.44.44-.19.1-.41.16-.67.16ZM67.12,6.32c.25,0,.45-.08.59-.23.14-.15.21-.37.21-.64s-.07-.49-.21-.65-.34-.23-.59-.23-.45.08-.59.23c-.14.15-.21.37-.21.64s.07.49.21.64c.14.15.34.23.59.23Z"/>
+            <path class="gris" d="M68.89,6.67v-1.98h-.24v-.47h.49v.38h.17c.08-.14.2-.24.35-.31.15-.07.32-.11.52-.11.32,0,.57.09.75.27.18.18.27.42.27.73v1.5h-.46v-1.42c0-.22-.06-.39-.18-.5-.12-.11-.29-.17-.52-.17s-.4.06-.52.17c-.12.11-.18.28-.18.5v1.42h-.46Z"/>
+            <!-- Isotipo -->
+            <path class="gris" d="M9.48,6.33c-.68.33-1.39.55-2.14.66-.29.04-.55.04-.83.06-.86.05-1.69.03-2.52-.14C2.52,6.6.92,5.88,0,4.64c0,.09,0,.19,0,.28,0,1.15.4,2.21,1.06,3.05.68.36,1.57.54,2.31.59.06,0,1.01-.02,1.37-.05.38-.04.74-.11,1.12-.21.82-.2,1.68-.56,2.41-1.02.35-.22.69-.45,1.01-.71.02,0-.02.04-.03.06-.31.37-.72.73-1.11,1.01-1.22.85-2.96,1.46-4.46,1.49-.1,0-1.14-.04-1.43-.09.77.51,1.7.8,2.69.8,2.26,0,4.17-1.53,4.75-3.61l-.18.09Z"/>
+            <path class="gris" d="M3.4,2.81c1.45,1.73,3.77,2.8,5.97,2.82,0,0,.01,0,.02,0l.4-.03c.03-.22.05-.45.05-.68C9.85,2.2,7.64,0,4.92,0c-.93,0-1.8.26-2.54.71,0,0,0,0,0,0,.1.74.43,1.39,1.02,2.11Z"/>
+            <path class="gris" d="M1.66,5.2c1.52,1.13,3.56,1.53,5.42,1.46.11,0,.58-.03.74-.06.39-.07.78-.14,1.17-.24.25-.06.46-.13.69-.22.04-.16.07-.33.1-.49-.07.02-.14.03-.2.05-.19.04-.37.05-.55.08-1.29.15-2.66-.17-3.84-.7-1.48-.67-3.19-2.02-3.44-3.73l-.03-.17C1.04,1.77.51,2.55.23,3.44c.26.65.76,1.26,1.44,1.76Z"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- Botón de descarga -->
+    <div class="download-section">
+      <button class="download-btn" onclick="downloadPDF()">
+        Descargar PDF
+      </button>
+      <p class="download-info">PDF con 2 páginas (frente y reverso) - Tamaño 90x50mm listo para imprenta</p>
+    </div>
+    
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Función para cambiar color del fondo del frente
+function setFrontColor(color) {
+  document.querySelector('.card-front').style.backgroundColor = color;
+  
+  // Actualizar campo hex y color picker
+  var hexInput = document.getElementById('hexValue');
+  var colorPicker = document.getElementById('customColor');
+  if (hexInput) hexInput.value = color;
+  if (colorPicker) colorPicker.value = color;
+  
+  // Actualizar botón activo
+  document.querySelectorAll('.color-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-color') === color) {
+      btn.classList.add('active');
+    }
+  });
+}
+
+// Función para el admin
+function cambiarColorTarjeta() {
+  var color = document.getElementById('colorPicker').value;
+  setFrontColor(color);
+  document.getElementById('colorHexDisplay').textContent = color;
+}
+// ========== CONFIGURACIÓN INICIAL ==========
+const DEFAULT_CONFIG = {
+  user: 'juan.ponce@proctek.com',
+  pass: '123proctek',
+  color: '#0f1053',
+  nameSize: 18,
+  titleSize: 12,
+  countries: [
+    { code: 'EC', phone: '+593' },
+    { code: 'AE', phone: '+971' },
+    { code: 'SA', phone: '+966' },
+    { code: 'BH', phone: '+973' },
+    { code: 'QA', phone: '+974' },
+    { code: 'OM', phone: '+968' },
+    { code: 'KW', phone: '+965' },
+    { code: 'US', phone: '+1' },
+    { code: 'MX', phone: '+52' },
+    { code: 'CO', phone: '+57' },
+    { code: 'PE', phone: '+51' },
+    { code: 'CL', phone: '+56' },
+    { code: 'AR', phone: '+54' },
+    { code: 'ES', phone: '+34' }
+  ]
+};
+
+let currentFrontColor = '#0f1053';
+
+// Cargar config de localStorage o usar defaults
+function getConfig() {
+  const saved = localStorage.getItem('proctek_config');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    // Combinar con defaults para campos faltantes
+    return { ...DEFAULT_CONFIG, ...parsed };
+  }
+  return { ...DEFAULT_CONFIG };
+}
+
+function saveConfig(config) {
+  localStorage.setItem('proctek_config', JSON.stringify(config));
+}
+
+// Historial
+function getHistory() {
+  const saved = localStorage.getItem('proctek_history');
+  return saved ? JSON.parse(saved) : [];
+}
+
+function addToHistory(data) {
+  const history = getHistory();
+  history.unshift({
+    fecha: new Date().toLocaleString('es-ES'),
+    ...data
+  });
+  localStorage.setItem('proctek_history', JSON.stringify(history.slice(0, 50)));
+}
+
+// ========== LOGIN ==========
+function showLogin() {
+  document.getElementById('loginModal').classList.add('active');
+  document.getElementById('loginError').style.display = 'none';
+}
+
+function hideLogin() {
+  document.getElementById('loginModal').classList.remove('active');
+  document.getElementById('adminUser').value = '';
+  document.getElementById('adminPass').value = '';
+}
+
+function doLogin() {
+  const user = document.getElementById('adminUser').value;
+  const pass = document.getElementById('adminPass').value;
+  const config = getConfig();
+  
+  if (user === config.user && pass === config.pass) {
+    hideLogin();
+    document.getElementById('adminPanel').classList.add('active');
+    document.querySelector('.admin-btn').textContent = '🟢 Admin';
+    loadAdminData();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  document.getElementById('adminPanel').classList.remove('active');
+  document.querySelector('.admin-btn').textContent = '👤 Admin';
+}
+
+// ========== ADMIN TABS ==========
+function showAdminTab(tabName) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tabName).classList.add('active');
+  
+  if (tabName === 'history') {
+    loadHistory();
+  }
+  if (tabName === 'countries') {
+    loadCountriesList();
+  }
+}
+
+function loadAdminData() {
+  const config = getConfig();
+  document.getElementById('configUser').value = config.user || DEFAULT_CONFIG.user;
+  document.getElementById('configPass').value = config.pass || DEFAULT_CONFIG.pass;
+  
+  let color = config.color || DEFAULT_CONFIG.color;
+  if (!color.startsWith('#')) color = '#' + color;
+  
+  document.getElementById('colorPicker').value = color;
+  document.getElementById('colorHexDisplay').textContent = color;
+  document.getElementById('configNameSize').value = config.nameSize || DEFAULT_CONFIG.nameSize;
+  document.getElementById('configTitleSize').value = config.titleSize || DEFAULT_CONFIG.titleSize;
+  
+  // Evento para actualizar display cuando cambia el picker
+  document.getElementById('colorPicker').addEventListener('input', function() {
+    document.getElementById('colorHexDisplay').textContent = this.value;
+  });
+}
+
+function saveCredentials() {
+  const config = getConfig();
+  config.user = document.getElementById('configUser').value;
+  config.pass = document.getElementById('configPass').value;
+  saveConfig(config);
+  alert('✅ Credenciales guardadas');
+}
+
+function saveDesign() {
+  const config = getConfig();
+  config.color = document.getElementById('colorPicker').value;
+  config.nameSize = parseInt(document.getElementById('configNameSize').value) || 18;
+  config.titleSize = parseInt(document.getElementById('configTitleSize').value) || 12;
+  saveConfig(config);
+  aplicarColor();
+  aplicarTamanos();
+  alert('✅ Diseño guardado');
+}
+
+function aplicarColor() {
+  var color = document.getElementById('colorPicker').value;
+  
+  // Cambiar fondo del frente
+  document.querySelector('.card-front').style.background = color;
+  
+  // Guardar en config
+  var config = getConfig();
+  config.color = color;
+  saveConfig(config);
+  
+  // Actualizar display
+  var hexDisplay = document.getElementById('colorHexDisplay');
+  if (hexDisplay) hexDisplay.textContent = color;
+}
+
+function aplicarTamanos() {
+  var nameSize = parseInt(document.getElementById('configNameSize').value) || 18;
+  var titleSize = parseInt(document.getElementById('configTitleSize').value) || 12;
+  
+  var nombre = document.getElementById('preview-nombre');
+  var cargo = document.getElementById('preview-cargo');
+  
+  if (nombre) nombre.style.fontSize = nameSize + 'px';
+  if (cargo) cargo.style.fontSize = titleSize + 'px';
+}
+
+function applyDesign() {
+  // No hacer nada - el color por defecto viene del CSS
+}
+
+function loadHistory() {
+  const history = getHistory();
+  const tbody = document.getElementById('historyBody');
+  const noHistory = document.getElementById('noHistory');
+  
+  if (history.length === 0) {
+    tbody.innerHTML = '';
+    noHistory.style.display = 'block';
+  } else {
+    noHistory.style.display = 'none';
+    tbody.innerHTML = history.map(h => `
+      <tr>
+        <td>${h.fecha}</td>
+        <td>${h.nombre}</td>
+        <td>${h.cargo}</td>
+        <td>${h.email}</td>
+      </tr>
+    `).join('');
+  }
+}
+
+// ========== PAÍSES ==========
+function getCountries() {
+  const config = getConfig();
+  return config.countries || DEFAULT_CONFIG.countries;
+}
+
+function loadCountriesSelect() {
+  const countries = getCountries();
+  const select = document.getElementById('pais');
+  select.innerHTML = countries.map(c => 
+    `<option value="${c.phone}">${c.code} ${c.phone}</option>`
+  ).join('');
+}
+
+function loadCountriesList() {
+  const countries = getCountries();
+  const list = document.getElementById('countriesList');
+  list.innerHTML = countries.map((c, i) => `
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 6px;">
+      <span style="color: white;">${c.code} ${c.phone}</span>
+      <button onclick="removeCountry(${i})" style="background: #f87171; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">✕</button>
+    </div>
+  `).join('');
+}
+
+function addCountry() {
+  const code = document.getElementById('newCountryCode').value.toUpperCase().trim();
+  const phone = document.getElementById('newCountryPhone').value.trim();
+  
+  if (!code || !phone) {
+    alert('Completa ambos campos');
+    return;
+  }
+  
+  if (!phone.startsWith('+')) {
+    alert('El código debe empezar con +');
+    return;
+  }
+  
+  const config = getConfig();
+  if (!config.countries) config.countries = [...DEFAULT_CONFIG.countries];
+  
+  // Verificar si ya existe
+  if (config.countries.some(c => c.code === code)) {
+    alert('Este país ya existe');
+    return;
+  }
+  
+  config.countries.push({ code, phone });
+  saveConfig(config);
+  
+  document.getElementById('newCountryCode').value = '';
+  document.getElementById('newCountryPhone').value = '';
+  
+  loadCountriesList();
+  loadCountriesSelect();
+  alert('✅ País agregado');
+}
+
+function removeCountry(index) {
+  if (!confirm('¿Eliminar este país?')) return;
+  
+  const config = getConfig();
+  if (!config.countries) config.countries = [...DEFAULT_CONFIG.countries];
+  
+  config.countries.splice(index, 1);
+  saveConfig(config);
+  
+  loadCountriesList();
+  loadCountriesSelect();
+}
+
+// ========== TARJETA ==========
+function updateCard() {
+  const nombre = document.getElementById('nombre').value || 'John Smith';
+  const cargo = document.getElementById('cargo').value || 'Project Manager';
+  const pais = document.getElementById('pais').value;
+  const telefonoNum = document.getElementById('telefono').value || '55 123 4567';
+  const telefono = '(' + pais + ') ' + telefonoNum;
+  const email = document.getElementById('email').value || 'john.smith@proctek.com';
+  
+  document.getElementById('preview-nombre').textContent = nombre;
+  document.getElementById('preview-cargo').textContent = cargo;
+  document.getElementById('preview-telefono').textContent = telefono;
+  document.getElementById('preview-email').textContent = email;
+}
+
+async function downloadPDF() {
+  const btn = document.querySelector('.download-btn');
+  btn.disabled = true;
+  btn.textContent = 'Generando...';
+  
+  const nombre = document.getElementById('nombre').value || 'John Smith';
+  const cargo = document.getElementById('cargo').value || 'Project Manager';
+  const pais = document.getElementById('pais').value;
+  const telefonoNum = document.getElementById('telefono').value || '55 123 4567';
+  const telefono = '(' + pais + ') ' + telefonoNum;
+  const email = document.getElementById('email').value || 'john.smith@proctek.com';
+  
+  addToHistory({ nombre, cargo, telefono, email });
+  
+  try {
+    const { jsPDF } = window.jspdf;
+    const cardWidthMM = 90;
+    const cardHeightMM = 50;
+    const scale = 4;
+    
+    const frontCard = document.querySelector('.card-front');
+    const frontCanvas = await html2canvas(frontCard, {
+      scale: scale,
+      useCORS: true,
+      backgroundColor: currentFrontColor,
+      logging: false,
+      allowTaint: true
+    });
+    
+    const backCard = document.querySelector('.card-back');
+    const backCanvas = await html2canvas(backCard, {
+      scale: scale,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      allowTaint: true
+    });
+    
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: [cardHeightMM, cardWidthMM]
+    });
+    
+    const frontImg = frontCanvas.toDataURL('image/png', 1.0);
+    pdf.addImage(frontImg, 'PNG', 0, 0, cardWidthMM, cardHeightMM);
+    
+    pdf.addPage([cardHeightMM, cardWidthMM], 'landscape');
+    const backImg = backCanvas.toDataURL('image/png', 1.0);
+    pdf.addImage(backImg, 'PNG', 0, 0, cardWidthMM, cardHeightMM);
+    
+    const fileName = `PROCTEK_Tarjeta_${nombre.replace(/\s+/g, '_')}.pdf`;
+    pdf.save(fileName);
+    
+    btn.textContent = 'Listo!';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Descargar PDF';
+    }, 2000);
+    
+  } catch (error) {
+    console.error('Error:', error);
+    btn.textContent = 'Error';
+    setTimeout(() 
