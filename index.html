@@ -232,22 +232,11 @@
         grid-template-columns: 1fr;
         gap: 14px;
       }
-      .card-front, .card-back {
-        width: 100%;
-        max-width: 450px;
-        height: auto;
-        aspect-ratio: 90 / 50;
-      }
-      .card-front .icon { width: 50px; }
-      .card-front .brand { width: 140px; }
-      .card-front .tagline { width: 120px; }
-      .card-back .name { font-size: 16px; }
-      .card-back .title { font-size: 11px; }
-      .card-back .phone, .card-back .email { font-size: 10px; }
-      .card-back .more-info { font-size: 8px; }
-      .card-back .website { font-size: 10px; }
       .cards-section {
-        gap: 20px;
+        gap: 16px;
+      }
+      .card-front, .card-back {
+        transform-origin: top center;
       }
       .download-btn {
         padding: 10px 24px;
@@ -275,14 +264,6 @@
         max-height: 90vh;
         padding: 16px;
       }
-    }
-
-    @media (max-width: 380px) {
-      .card-back {
-        padding: 16px;
-      }
-      .card-back .logo-top { width: 80px; }
-      .card-back .footer-right { width: 80px; }
     }
     
     /* Texto descriptivo debajo del botón */
@@ -1370,6 +1351,37 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Inicializar preview
   updateCard();
+  
+  // Escalar tarjetas en móvil
+  function scaleCards() {
+    var front = document.getElementById('cardFront');
+    var back = document.getElementById('cardBack');
+    if (!front || !back) return;
+    
+    var containerWidth = front.parentElement.offsetWidth;
+    var cardWidth = 450;
+    
+    if (containerWidth < cardWidth) {
+      var scale = containerWidth / cardWidth;
+      var marginBottom = -250 * (1 - scale);
+      
+      front.style.transform = 'scale(' + scale + ')';
+      front.style.transformOrigin = 'top center';
+      front.style.marginBottom = marginBottom + 'px';
+      
+      back.style.transform = 'scale(' + scale + ')';
+      back.style.transformOrigin = 'top center';
+      back.style.marginBottom = marginBottom + 'px';
+    } else {
+      front.style.transform = '';
+      front.style.marginBottom = '';
+      back.style.transform = '';
+      back.style.marginBottom = '';
+    }
+  }
+  
+  scaleCards();
+  window.addEventListener('resize', scaleCards);
   
   console.log('PROCTEK Card Generator initialized');
 });
