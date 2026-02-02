@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PROCTEK - Generador de Tarjetas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -119,7 +120,7 @@
     .card-front {
       width: 450px;
       height: 250px;
-      background: #0f1053;
+      background: #0002ff;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
@@ -168,14 +169,14 @@
     .card-back .name {
       font-size: 18px;
       font-weight: 600;
-      color: #0f1053;
+      color: #000000;
       margin-bottom: 4px;
     }
     
     .card-back .title {
       font-size: 12px;
       font-weight: 500;
-      color: #0f1053;
+      color: #000000;
       margin-bottom: 12px;
     }
     
@@ -183,7 +184,7 @@
     .card-back .email {
       font-size: 11px;
       font-weight: 400;
-      color: #0f1053;
+      color: #000000;
       margin-bottom: 2px;
     }
     
@@ -198,13 +199,13 @@
     
     .card-back .more-info {
       font-size: 9px;
-      color: #0f1053;
+      color: #000000;
     }
     
     .card-back .website {
       font-size: 11px;
       font-weight: 600;
-      color: #0f1053;
+      color: #000000;
     }
     
     .card-back .footer-right {
@@ -217,13 +218,78 @@
     
     /* Responsive */
     @media (max-width: 600px) {
+      body {
+        padding: 12px 8px;
+      }
+      h1 {
+        font-size: 1.4rem;
+      }
+      .form-section {
+        padding: 16px;
+        margin-bottom: 24px;
+      }
       .form-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
       }
       .card-front, .card-back {
         width: 100%;
         max-width: 450px;
+        height: auto;
+        aspect-ratio: 90 / 50;
       }
+      .card-front .icon { width: 50px; }
+      .card-front .brand { width: 140px; }
+      .card-front .tagline { width: 120px; }
+      .card-back .name { font-size: 16px; }
+      .card-back .title { font-size: 11px; }
+      .card-back .phone, .card-back .email { font-size: 10px; }
+      .card-back .more-info { font-size: 8px; }
+      .card-back .website { font-size: 10px; }
+      .cards-section {
+        gap: 20px;
+      }
+      .download-btn {
+        padding: 10px 24px;
+        font-size: 0.85rem;
+      }
+      .admin-btn {
+        top: 10px;
+        right: 10px;
+        padding: 6px 10px;
+        font-size: 0.7rem;
+      }
+      .admin-panel {
+        padding: 16px;
+      }
+      .admin-tabs {
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .admin-tab {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+      }
+      .modal {
+        width: 95%;
+        max-height: 90vh;
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .card-back {
+        padding: 16px;
+      }
+      .card-back .logo-top { width: 80px; }
+      .card-back .footer-right { width: 80px; }
+    }
+    
+    /* Texto descriptivo debajo del botón */
+    .download-info {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.8rem;
+      margin-top: 10px;
     }
     
     /* Botón de descarga */
@@ -257,12 +323,6 @@
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
-    }
-    
-    .download-info {
-      color: rgba(255,255,255,0.4);
-      font-size: 0.8rem;
-      margin-top: 12px;
     }
     
     /* Admin button */
@@ -670,8 +730,8 @@
     <div class="admin-content" id="tab-design">
       <div class="config-row">
         <span class="config-label">Color del fondo:</span>
-        <input type="color" id="colorPicker" value="#0f1053" style="width:60px; height:40px; border:none; cursor:pointer; border-radius:8px;">
-        <span id="colorHexDisplay" style="color:white; margin-left:10px;">#0f1053</span>
+        <input type="color" id="colorPicker" value="#0002ff" style="width:60px; height:40px; border:none; cursor:pointer; border-radius:8px;">
+        <span id="colorHexDisplay" style="color:white; margin-left:10px;">#0002ff</span>
         <button onclick="cambiarColorTarjeta()" style="background:#4ade80; color:#000; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-family:'Funnel Display',sans-serif; margin-left:16px;">Aplicar Color</button>
       </div>
       <div class="config-row">
@@ -740,14 +800,14 @@
         <label>Color del frente</label>
         <p style="color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-bottom: 8px;">Ajusta el tono para calibrar con tu imprenta</p>
         <div class="color-options">
-          <button class="color-btn" data-color="#0a0b38" onclick="setFrontColor('#0a0b38')" style="background:#0a0b38;" title="Azul -20%"></button>
-          <button class="color-btn" data-color="#0c0e45" onclick="setFrontColor('#0c0e45')" style="background:#0c0e45;" title="Azul -10%"></button>
-          <button class="color-btn active" data-color="#0f1053" onclick="setFrontColor('#0f1053')" style="background:#0f1053;" title="Azul PROCTEK"></button>
-          <button class="color-btn" data-color="#121461" onclick="setFrontColor('#121461')" style="background:#121461;" title="Azul +10%"></button>
-          <button class="color-btn" data-color="#161970" onclick="setFrontColor('#161970')" style="background:#161970;" title="Azul +20%"></button>
-          <button class="color-btn" data-color="#1a1d7f" onclick="setFrontColor('#1a1d7f')" style="background:#1a1d7f;" title="Azul +30%"></button>
-          <input type="color" id="customColor" value="#0f1053" onchange="setFrontColor(this.value)" oninput="document.getElementById('hexValue').value=this.value" title="Color personalizado">
-          <input type="text" id="hexValue" value="#0f1053" maxlength="7" style="width:80px; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.1); color:white; font-family:monospace; text-transform:uppercase;" onchange="if(this.value.match(/^#[0-9A-Fa-f]{6}$/)){setFrontColor(this.value);document.getElementById('customColor').value=this.value;}">
+          <button class="color-btn" data-color="#0002cc" onclick="setFrontColor('#0002cc')" style="background:#0002cc;" title="Azul -20%"></button>
+          <button class="color-btn" data-color="#0002e6" onclick="setFrontColor('#0002e6')" style="background:#0002e6;" title="Azul -10%"></button>
+          <button class="color-btn active" data-color="#0002ff" onclick="setFrontColor('#0002ff')" style="background:#0002ff;" title="Azul PROCTEK"></button>
+          <button class="color-btn" data-color="#1a1cff" onclick="setFrontColor('#1a1cff')" style="background:#1a1cff;" title="Azul +10%"></button>
+          <button class="color-btn" data-color="#3335ff" onclick="setFrontColor('#3335ff')" style="background:#3335ff;" title="Azul +20%"></button>
+          <button class="color-btn" data-color="#4d4fff" onclick="setFrontColor('#4d4fff')" style="background:#4d4fff;" title="Azul +30%"></button>
+          <input type="color" id="customColor" value="#0002ff" onchange="setFrontColor(this.value)" oninput="document.getElementById('hexValue').value=this.value" title="Color personalizado">
+          <input type="text" id="hexValue" value="#0002ff" maxlength="7" style="width:80px; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.1); color:white; font-family:monospace; text-transform:uppercase;" onchange="if(this.value.match(/^#[0-9A-Fa-f]{6}$/)){setFrontColor(this.value);document.getElementById('customColor').value=this.value;}">
         </div>
       </div>
     </div>
@@ -814,17 +874,17 @@
         <!-- Logo PROCTEK azul -->
         <svg class="logo-top" viewBox="0 0 72.08 12.39">
           <g>
-            <path fill="#0f1053" d="M11.94,7.96c-.86.42-1.75.69-2.69.83-.37.06-.69.05-1.05.07-1.08.06-2.13.03-3.17-.18C3.17,8.31,1.16,7.4.01,5.84c0,.12-.01.23-.01.35,0,1.45.5,2.78,1.33,3.84.85.45,1.97.68,2.9.74.07,0,1.27-.02,1.73-.07.48-.05.93-.14,1.4-.26,1.04-.25,2.11-.71,3.03-1.28.44-.27.87-.57,1.27-.89.03,0-.02.05-.04.08-.39.46-.91.92-1.4,1.27-1.54,1.07-3.72,1.84-5.61,1.87-.12,0-1.44-.05-1.8-.11.97.64,2.14,1.01,3.38,1.01,2.85,0,5.25-1.92,5.97-4.54l-.18.09Z"/>
-            <path fill="#0f1053" d="M4.28,3.54c1.83,2.18,4.75,3.52,7.51,3.55,0,0,.02,0,.02,0l.51-.04c.04-.28.06-.57.06-.86,0-3.42-2.77-6.2-6.2-6.2-1.17,0-2.26.32-3.2.89,0,0,0,0,0,0,.13.93.54,1.76,1.29,2.65Z"/>
-            <path fill="#0f1053" d="M2.09,6.54c1.91,1.42,4.48,1.92,6.83,1.84.14,0,.74-.03.94-.07.49-.09.98-.18,1.47-.3.31-.08.58-.17.87-.27.05-.2.09-.41.13-.62-.09.02-.17.04-.25.06-.24.05-.46.07-.69.09-1.62.19-3.34-.21-4.83-.88-1.86-.84-4.01-2.55-4.33-4.69l-.03-.22c-.87.74-1.54,1.73-1.89,2.84.33.82.95,1.58,1.81,2.22Z"/>
-            <path fill="#0f1053" d="M30.75,7.64l-1.21-.94h.04c.35,0,.65-.11.91-.33.26-.22.39-.51.4-.85.02-.36-.1-.69-.36-.97-.26-.28-.57-.42-.92-.42h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.92s.1,0,.18.09c.06.07.09.14.09.21,0,.07-.02.13-.07.18-.05.05-.11.08-.18.08h-4.93c-.14,0-.26.05-.35.15-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.53c.14,0,.26.04.37.13l1.6,1.24c.15.11.33.17.53.17h.32c.1,0,.18-.04.25-.11.07-.07.1-.17.08-.26,0-.09-.05-.17-.13-.23Z"/>
-            <path fill="#0f1053" d="M36.55,4.14h-2.73c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h2.73c.54,0,1.01-.19,1.39-.58s.58-.85.58-1.39v-.18c0-.54-.19-1.01-.58-1.39-.38-.38-.85-.58-1.39-.58ZM36.6,7.21h-2.85c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h2.85c.26,0,.48.09.66.27.18.18.27.4.27.66v.18c0,.26-.09.48-.27.66-.18.18-.4.27-.66.27Z"/>
-            <path fill="#0f1053" d="M45.92,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
-            <path fill="#0f1053" d="M53.53,4.14h-5.91c-.14,0-.26.05-.35.15-.1.1-.15.21-.15.35v.29c0,.07.03.13.08.17.05.05.11.08.18.08h2.59v2.81c0,.07.03.13.08.18.05.05.11.08.17.08h.23c.13,0,.25-.05.35-.14.1-.1.15-.22.15-.36v-2.57h2.34c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18s-.11-.07-.18-.07Z"/>
-            <path fill="#0f1053" d="M61.17,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.09-.09-.15-.19-.2-.29h4.3c.15,0,.29-.04.41-.13.13-.1.19-.22.19-.37v-.22c0-.08-.04-.15-.1-.19-.05-.04-.12-.06-.19-.06h-4.58c.04-.08.1-.16.17-.23.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
-            <path fill="#0f1053" d="M68.88,7.64l-1.89-1.45,1.89-1.46c.08-.06.12-.15.12-.26,0-.1-.03-.18-.1-.24-.06-.06-.14-.09-.23-.09h-.33c-.19,0-.36.06-.52.17l-1.76,1.36h-2.74s0-1.04,0-1.04c0-.13-.05-.25-.15-.35-.1-.1-.22-.15-.35-.15h-.22c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v3.59c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.74s1.76,1.35,1.76,1.35c.16.12.33.18.53.18h.32c.1,0,.18-.03.24-.1.06-.06.09-.14.09-.23,0-.11-.04-.2-.13-.27Z"/>
-            <path fill="#0f1053" d="M21.91,4.14h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.93s.1,0,.17.09c.06.07.09.14.09.22,0,.07-.02.12-.07.17s-.11.07-.18.07l-4.87.03c-.14,0-.32.02-.41.12-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h4.4c.35,0,.65-.12.9-.34.25-.23.38-.53.38-.88s-.13-.67-.37-.94c-.25-.27-.56-.41-.91-.41Z"/>
-            <path fill="#0f1053" d="M72.08,7.48v.07c0,.4-.32.72-.72.72h-.42c-.4,0-.72-.32-.72-.72v-.07c0-.4.32-.72.72-.72h.42c.4,0,.72.32.72.72ZM71.84,7.48c0-.25-.2-.46-.46-.46h-.47c-.25,0-.46.21-.46.46v.07c0,.25.21.46.46.46h.47c.25,0,.46-.21.46-.46v-.07Z"/>
+            <path fill="#0002ff" d="M11.94,7.96c-.86.42-1.75.69-2.69.83-.37.06-.69.05-1.05.07-1.08.06-2.13.03-3.17-.18C3.17,8.31,1.16,7.4.01,5.84c0,.12-.01.23-.01.35,0,1.45.5,2.78,1.33,3.84.85.45,1.97.68,2.9.74.07,0,1.27-.02,1.73-.07.48-.05.93-.14,1.4-.26,1.04-.25,2.11-.71,3.03-1.28.44-.27.87-.57,1.27-.89.03,0-.02.05-.04.08-.39.46-.91.92-1.4,1.27-1.54,1.07-3.72,1.84-5.61,1.87-.12,0-1.44-.05-1.8-.11.97.64,2.14,1.01,3.38,1.01,2.85,0,5.25-1.92,5.97-4.54l-.18.09Z"/>
+            <path fill="#0002ff" d="M4.28,3.54c1.83,2.18,4.75,3.52,7.51,3.55,0,0,.02,0,.02,0l.51-.04c.04-.28.06-.57.06-.86,0-3.42-2.77-6.2-6.2-6.2-1.17,0-2.26.32-3.2.89,0,0,0,0,0,0,.13.93.54,1.76,1.29,2.65Z"/>
+            <path fill="#0002ff" d="M2.09,6.54c1.91,1.42,4.48,1.92,6.83,1.84.14,0,.74-.03.94-.07.49-.09.98-.18,1.47-.3.31-.08.58-.17.87-.27.05-.2.09-.41.13-.62-.09.02-.17.04-.25.06-.24.05-.46.07-.69.09-1.62.19-3.34-.21-4.83-.88-1.86-.84-4.01-2.55-4.33-4.69l-.03-.22c-.87.74-1.54,1.73-1.89,2.84.33.82.95,1.58,1.81,2.22Z"/>
+            <path fill="#0002ff" d="M30.75,7.64l-1.21-.94h.04c.35,0,.65-.11.91-.33.26-.22.39-.51.4-.85.02-.36-.1-.69-.36-.97-.26-.28-.57-.42-.92-.42h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.92s.1,0,.18.09c.06.07.09.14.09.21,0,.07-.02.13-.07.18-.05.05-.11.08-.18.08h-4.93c-.14,0-.26.05-.35.15-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.53c.14,0,.26.04.37.13l1.6,1.24c.15.11.33.17.53.17h.32c.1,0,.18-.04.25-.11.07-.07.1-.17.08-.26,0-.09-.05-.17-.13-.23Z"/>
+            <path fill="#0002ff" d="M36.55,4.14h-2.73c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h2.73c.54,0,1.01-.19,1.39-.58s.58-.85.58-1.39v-.18c0-.54-.19-1.01-.58-1.39-.38-.38-.85-.58-1.39-.58ZM36.6,7.21h-2.85c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h2.85c.26,0,.48.09.66.27.18.18.27.4.27.66v.18c0,.26-.09.48-.27.66-.18.18-.4.27-.66.27Z"/>
+            <path fill="#0002ff" d="M45.92,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.18-.18-.27-.4-.27-.66v-.18c0-.26.09-.48.27-.66.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
+            <path fill="#0002ff" d="M53.53,4.14h-5.91c-.14,0-.26.05-.35.15-.1.1-.15.21-.15.35v.29c0,.07.03.13.08.17.05.05.11.08.18.08h2.59v2.81c0,.07.03.13.08.18.05.05.11.08.17.08h.23c.13,0,.25-.05.35-.14.1-.1.15-.22.15-.36v-2.57h2.34c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18s-.11-.07-.18-.07Z"/>
+            <path fill="#0002ff" d="M61.17,4.14h-4.45c-.54,0-1.01.19-1.39.58-.38.38-.58.85-.58,1.39v.18c0,.54.19,1.01.58,1.39.38.38.85.58,1.39.58h4.45c.07,0,.14-.03.18-.08.04-.05.07-.11.07-.18v-.28c0-.13-.05-.25-.15-.35-.1-.1-.21-.15-.35-.15h-4.26c-.26,0-.47-.09-.66-.27-.09-.09-.15-.19-.2-.29h4.3c.15,0,.29-.04.41-.13.13-.1.19-.22.19-.37v-.22c0-.08-.04-.15-.1-.19-.05-.04-.12-.06-.19-.06h-4.58c.04-.08.1-.16.17-.23.18-.18.4-.27.66-.27h4.26c.13,0,.25-.05.35-.15.1-.1.15-.22.15-.35v-.28c0-.07-.02-.13-.07-.18-.05-.05-.11-.07-.18-.07Z"/>
+            <path fill="#0002ff" d="M68.88,7.64l-1.89-1.45,1.89-1.46c.08-.06.12-.15.12-.26,0-.1-.03-.18-.1-.24-.06-.06-.14-.09-.23-.09h-.33c-.19,0-.36.06-.52.17l-1.76,1.36h-2.74s0-1.04,0-1.04c0-.13-.05-.25-.15-.35-.1-.1-.22-.15-.35-.15h-.22c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v3.59c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h2.74s1.76,1.35,1.76,1.35c.16.12.33.18.53.18h.32c.1,0,.18-.03.24-.1.06-.06.09-.14.09-.23,0-.11-.04-.2-.13-.27Z"/>
+            <path fill="#0002ff" d="M21.91,4.14h-5.12c-.07,0-.13.02-.18.07-.05.05-.08.11-.08.18v.28c0,.14.05.26.15.35.1.1.22.15.35.15h4.93s.1,0,.17.09c.06.07.09.14.09.22,0,.07-.02.12-.07.17s-.11.07-.18.07l-4.87.03c-.14,0-.32.02-.41.12-.1.1-.15.22-.15.35v1.75c0,.07.03.13.08.18.05.05.11.08.18.08h.22c.14,0,.26-.05.35-.15.1-.1.15-.22.15-.35v-1.04h4.4c.35,0,.65-.12.9-.34.25-.23.38-.53.38-.88s-.13-.67-.37-.94c-.25-.27-.56-.41-.91-.41Z"/>
+            <path fill="#0002ff" d="M72.08,7.48v.07c0,.4-.32.72-.72.72h-.42c-.4,0-.72-.32-.72-.72v-.07c0-.4.32-.72.72-.72h.42c.4,0,.72.32.72.72ZM71.84,7.48c0-.25-.2-.46-.46-.46h-.47c-.25,0-.46.21-.46.46v.07c0,.25.21.46.46.46h.47c.25,0,.46-.21.46-.46v-.07Z"/>
           </g>
         </svg>
         
@@ -894,7 +954,7 @@
 const DEFAULT_CONFIG = {
   user: 'juan.ponce@proctek.com',
   pass: '123proctek',
-  color: '#0f1053',
+  color: '#0002ff',
   nameSize: 18,
   titleSize: 12,
   countries: [
@@ -915,7 +975,7 @@ const DEFAULT_CONFIG = {
   ]
 };
 
-let currentFrontColor = '#0f1053';
+let currentFrontColor = '#0002ff';
 
 // Cargar config de localStorage o usar defaults
 function getConfig() {
@@ -1284,6 +1344,21 @@ async function downloadPDF() {
 
 // ========== INICIALIZACIÓN ==========
 document.addEventListener('DOMContentLoaded', function() {
+  // Migración: si el color guardado es de una versión anterior, resetear al default
+  try {
+    const saved = localStorage.getItem('proctek_config');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Si el color guardado NO es el default actual ni un preset conocido, resetear
+      const validColors = ['#0002ff','#0002cc','#0002e6','#1a1cff','#3335ff','#4d4fff'];
+      if (parsed.color && !validColors.includes(parsed.color.toLowerCase())) {
+        parsed.color = DEFAULT_CONFIG.color;
+        localStorage.setItem('proctek_config', JSON.stringify(parsed));
+        console.log('Config migrada: color reseteado a', DEFAULT_CONFIG.color);
+      }
+    }
+  } catch(e) {}
+
   // Cargar países en el select
   loadCountriesSelect();
   
