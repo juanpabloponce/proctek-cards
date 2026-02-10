@@ -1388,3 +1388,17 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       front.style.transform = '';
       front.style.marginBottom = '';
+      back.style.transform = '';
+      back.style.marginBottom = '';
+    }
+  }
+  
+  scaleCards();
+  window.addEventListener('resize', scaleCards);
+  
+  console.log('PROCTEK Card Generator initialized');
+});
+</script>
+
+</body>
+</html>
